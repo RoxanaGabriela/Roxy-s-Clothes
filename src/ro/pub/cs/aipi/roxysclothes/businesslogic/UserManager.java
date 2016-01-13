@@ -21,14 +21,15 @@ public class UserManager extends EntityManager {
 			DatabaseOperations databaseOperations = DatabaseOperationsImplementation.getInstance();
 			int result = Constants.USER_NONE;
 			List<String> attributes = new ArrayList<>();
-			attributes.add(Constants.ID_ATTRIBUTE);
-			List<List<String>> id = databaseOperations.getTableContent(table, attributes,
+			attributes.add(Constants.TYPE_ATTRIBUTE);
+			List<List<String>> type = databaseOperations.getTableContent(table, attributes,
 					Constants.USERNAME + "=\'" + username + "\' AND " + Constants.PASSWORD + "=\'" + password + "\'",
 					null, null, null);
-			if (id != null && !id.isEmpty() && id.get(0) != null && id.get(0).get(0) != null) {
-				return Constants.USER_CLIENT;
+			if (type != null && !type.isEmpty() && type.get(0) != null && type.get(0).get(0) != null) {
+				if (type.equals(Constants.CLIENT_TYPE))
+					return Constants.USER_CLIENT;
+				return Constants.USER_ADMINISTRATOR;
 			}
-			return result;
 		} catch (SQLException sqlException) {
 			System.out.println("An exception has occurred: " + sqlException.getMessage());
 			if (Constants.DEBUG) {
