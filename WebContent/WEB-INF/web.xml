@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+	<display-name>Restaurant</display-name>
+	<welcome-file-list>
+		<welcome-file>ClientServlet</welcome-file>
+	</welcome-file-list>
+	<servlet>
+		<description></description>
+		<display-name>LoginServlet</display-name>
+		<servlet-name>LoginServlet</servlet-name>
+		<servlet-class>ro.pub.cs.aipi.roxysclothes.servlets.LoginServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LoginServlet</servlet-name>
+		<url-pattern>/LoginServlet</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<description></description>
+		<display-name>RegisterServlet</display-name>
+		<servlet-name>RegisterServlet</servlet-name>
+		<servlet-class>ro.pub.cs.aipi.roxysclothes.servlets.RegisterServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>RegisterServlet</servlet-name>
+		<url-pattern>/RegisterServlet</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<description></description>
+		<display-name>NotLoggedInClientServlet</display-name>
+		<servlet-name>NotLoggedInClientServlet</servlet-name>
+		<servlet-class>ro.pub.cs.aipi.roxysclothes.servlets.NotLoggedInClientServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>NotLoggedInClientServlet</servlet-name>
+		<url-pattern>/NotLoggedInClientServlet</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<description></description>
+		<display-name>ClientServlet</display-name>
+		<servlet-name>ClientServlet</servlet-name>
+		<servlet-class>ro.pub.cs.aipi.roxysclothes.servlets.ClientServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ClientServlet</servlet-name>
+		<url-pattern>/ClientServlet</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<description></description>
+		<display-name>AccountServlet</display-name>
+		<servlet-name>AccountServlet</servlet-name>
+		<servlet-class>ro.pub.cs.aipi.roxysclothes.servlets.AccountServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AccountServlet</servlet-name>
+		<url-pattern>/AccountServlet</url-pattern>
+	</servlet-mapping>
+</web-app>
