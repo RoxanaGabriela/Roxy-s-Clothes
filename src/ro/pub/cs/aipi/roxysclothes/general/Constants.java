@@ -37,6 +37,11 @@ public interface Constants {
 	
 	public final static String USERNAME = "username";
 	public final static String PASSWORD = "password";
+	public final static String FIRST_NAME = "first_name";
+	public final static String LAST_NAME = "last_name";
+	public final static String ADDRESS = "address";
+	public final static String PHONE_NUMBER = "phone_number";
+	public final static String EMAIL = "email";
 	
 	public final static String INSERT_BUTTON_NAME = "Insert";
 	public final static String UPDATE_BUTTON_NAME = "Update";
@@ -55,13 +60,12 @@ public interface Constants {
 	public final static String SORT = "Sort: ";
 	public final static String CURRENT_SORT = "currentSort";
 	
-	public final static String CATEGORY = "CATEGORY: ";
+	public final static String CATEGORY = "Category: ";
 	public final static String CURRENT_CATEGORY = "currentCategory";
 	
 	public final static String LABELS_FILTER = "labelFilter";
-	public final static String LABEL = "LABEL: ";
+	public final static String LABEL = "Filter: ";
 	public final static String CURRENT_LABEL = "currentLabel";
-	public final static String LABEL_ATTRIBUTE = "label";
 	
 	public final static String SEARCH = "Search";
 	
@@ -81,6 +85,12 @@ public interface Constants {
 	public final static String INVALID_COMMAND_ERROR1 = "the order cannot be meet for the ";
 	public final static String INVALID_COMMAND_ERROR2 = " (insufficient stock)";
 	
+	public final static String ERROR_USERNAME_PASSWORD = "Either username or password are incorrect!";
+	public final static String ERROR_EXISTING_USER = "A user with the same username and password already exists!";
+	public final static String ERROR_EMAIL = "The email is invalid!";
+	public final static String ERROR_PHONE_NUMBER = "The phone number is invalid!";
+	public final static String ERROR_EMPTY_FIELDS = "All the fields are required!";
+	
 	
 	
 	
@@ -99,22 +109,8 @@ public interface Constants {
 	public final static String ACCOUNT_FORM = "account_form";
 	public final static String NOT_LOGGED_IN_CLIENT_FORM = "not_logged_in_client_form";
 	public final static String LOGGED_IN_CLIENT_FORM = "logged_in_client_form";
-
-	public final static String ERROR_USERNAME_PASSWORD = "Either username or password are incorrect!";
-	public final static String ERROR_PERSONAL_IDENTIFIER = "The personal identifier is invalid!";
-	public final static String ERROR_EXISTING_PERSONAL_IDENTIFIER = "The personal identifier is already in the database!";
-	public final static String ERROR_EXISTING_USER = "A user with the same username and password already exists!";
-	public final static String ERROR_EMAIL = "The email is invalid!";
-	public final static String ERROR_PHONE_NUMBER = "The phone number is invalid!";
-	public final static String ERROR_EMPTY_FIELDS = "All the fields are required!";
 	
-	public final static String PERSONAL_IDENTIFIER = "personalIdentifier";
-	public final static String FIRST_NAME = "firstName";
-	public final static String LAST_NAME = "lastName";
-	public final static String ADDRESS = "address";
-	public final static String PHONE_NUMBER = "phoneNumber";
-	public final static String EMAIL = "email";
-	public final static String IBAN = "iban";
+
 	public final static String ORDER = "order";
 
 	public final static int OPERATION_NONE = 0;

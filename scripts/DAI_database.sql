@@ -19,10 +19,10 @@ ALTER TABLE user ADD CONSTRAINT user_ck_type_possible_values CHECK (type in ('ad
 
 CREATE TABLE IF NOT EXISTS address (
 	id					INT(10) 		UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
-	judet				VARCHAR(50)		NOT NULL,
-    oras				VARCHAR(50)		NOT NULL,
-    strada				VARCHAR(50)		NOT NULL,
-    cod_postal			INT(10)			UNSIGNED NOT NULL,
+	county				VARCHAR(50)		NOT NULL,
+    city				VARCHAR(50)		NOT NULL,
+    street				VARCHAR(50)		NOT NULL,
+    postal_code			INT(10)			UNSIGNED NOT NULL,
     user_id				INT(10)			UNSIGNED NOT NULL,
     
     FOREIGN KEY (user_id) REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE
@@ -33,9 +33,11 @@ CREATE TABLE IF NOT EXISTS product (
     name				VARCHAR(50)		NOT NULL,
     date				DATE 			NOT NULL,
     price				FLOAT(6, 2)		UNSIGNED NOT NULL DEFAULT '0',
+    currency			VARCHAR(10)		NOT NULL,
     producer			VARCHAR(50)		NOT NULL,
     category			VARCHAR(50)		NOT NULL,
-    color				VARCHAR(50)		NOT NULL
+    color				VARCHAR(50)		NOT NULL,
+    description			VARCHAR(50)		NOT NULL
 );
 ALTER TABLE product ADD CONSTRAINT product_ck_price_should_be_positive CHECK (price>0);
 ALTER TABLE product ADD CONSTRAINT product_ck_category_possible_values CHECK (type in ('pantaloni', 'bluze', 'tricouri', 'fuste', 'rochii', 'jachete'));
@@ -86,3 +88,11 @@ CREATE TABLE IF NOT EXISTS invoice_details (
 );
 ALTER TABLE invoice_details ADD CONSTRAINT invoice_details_ck_quantity_should_be_positive CHECK (quantity>0);
 ALTER TABLE invoice_details ADD CONSTRAINT invoice_details_ck_size_possible_values CHECK (type in ('S', 'M', 'L', 'XL', 'XXL'));
+
+INSERT INTO product (name, date, price, currency, producer, category, color, description) VALUES ('Top Z Dana Pink Style', CURDATE(), '45.00', 'LEI', 'Z', 'tricouri', 'roz', 'Top Z roz, se inchide cu capse la spate.\nSpalare la masina max. 30°C.');
+INSERT INTO size (size, stockpile, product_id) VALUES ('S', '20', '1');
+INSERT INTO size (size, stockpile, product_id) VALUES ('M', '20', '1');
+INSERT INTO size (size, stockpile, product_id) VALUES ('L', '20', '1');
+INSERT INTO size (size, stockpile, product_id) VALUES ('XL', '20', '1');
+INSERT INTO fabric (name, percent, product_id) VALUES ('poliester', '51', '1');
+INSERT INTO fabric (name, percent, product_id) VALUES ('nailon', '49', '1');

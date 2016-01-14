@@ -16,42 +16,43 @@ public class ProductManager extends EntityManager {
 		table = "product";
 	}
 	
-	public List<List<Record>> getCollection(String currentDate, String currentCategory, List<String> labelsFilter) {
+	public List<List<Record>> getCollection(String currentSort, String currentCategory, List<String> labelsFilter) {
 		List<List<Record>> result = new ArrayList<>();
 		
 		try {
 			DatabaseOperations databaseOperations = DatabaseOperationsImplementation.getInstance();
 			
-			String tableName = new String("(SELECT d.id, d.name, d.type, d.stockpile, weight, price, labels, "
-					+ "GROUP_CONCAT(CONCAT(i.name, \" \",dd.stockpile, \" \", i.unit, \", \")) ingredients "
-					+ "FROM dish d, dish_details dd, ingredient i WHERE d.id=dd.dish_id AND i.id=dd.ingredient_id "
-					+ "GROUP BY d.id) AS t, menu m, menu_details md");
+			String tableName = new String("product p, fabric f");
 			List<String> attributes = new ArrayList<>();
-			attributes.add("GROUP_CONCAT(CONCAT(\"(Id \",t.id, \") (Name \", t.name, \") (Type \", t.type, "
-					+ "\") (Stockpile \", t.stockpile, \") (Weight \", t.weight, \") (Price \", t.price, "
-					+ "\") (Labels \", t.labels, \") (Ingredients \", t.ingredients, \"); \"))");
-			attributes.add("m.day");
+			attributes.add("p.name AS name");
+			attributes.add("CONCAT(p.price, ' ', p.currency) AS price");
+			attributes.add("p.producer AS producer");
+			attributes.add("p.color AS color");
+			attributes.add("p.description AS description");
+			attributes.add("GROUP_CONCAT(CONCAT(f.percent, '% ', f.name))");
 			
-			String dateClause = new String();
-			if (currentDate != null && !currentDate.isEmpty()) {
-				dateClause = " AND m.day=\'" + currentDate + "\'";
+			
+			
+			String orderByClause = new String();
+			if (currentSort != null && !currentSort.isEmpty()) {
+				orderByClause = currentSort;
 			}
 			
 			String categoryClause = new String();
 			if (currentCategory != null && !currentCategory.isEmpty()) {
-				categoryClause = " AND t.type=\'" + currentCategory + "\'";
+				categoryClause = " AND p.category=\'" + currentCategory + "\'";
 			}
 			
-			String labelsClause = new String();
+			/*String labelsClause = new String();
 			if (labelsFilter != null && !labelsFilter.isEmpty()) {
 				labelsClause = new String(" AND (");
 				for (String label : labelsFilter)
 					labelsClause += "t.labels LIKE \'%" + label + "%\' OR ";
 				labelsClause = labelsClause.substring(0, labelsClause.length() - 3) + ")";
-			}
+			}*/
 			
-			String whereClause = new String("m.id = md.menu_id AND t.id=md.dish_id AND t.stockpile>0" + dateClause + categoryClause + labelsClause);
-			String groupByClause = new String("m.day");
+			String whereClause = new String("f.product_id=p.id" + dateClause + categoryClause + labelsClause);
+			String groupByClause = new String("p.id");
 			List<List<String>> dishes = databaseOperations.getTableContent(tableName, attributes, whereClause, null, null, groupByClause);
 			
 			for (List<String> dish : dishes) {

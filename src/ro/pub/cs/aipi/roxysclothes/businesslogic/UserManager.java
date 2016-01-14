@@ -17,8 +17,9 @@ public class UserManager extends EntityManager {
 	}
 	
 	public int verifyUser(String username, String password) {
+		DatabaseOperations databaseOperations = null;
 		try {
-			DatabaseOperations databaseOperations = DatabaseOperationsImplementation.getInstance();
+			databaseOperations = DatabaseOperationsImplementation.getInstance();
 			int result = Constants.USER_NONE;
 			List<String> attributes = new ArrayList<>();
 			attributes.add(Constants.TYPE_ATTRIBUTE);
@@ -35,15 +36,18 @@ public class UserManager extends EntityManager {
 			if (Constants.DEBUG) {
 				sqlException.printStackTrace();
 			}
+		} finally {
+			databaseOperations.releaseResources();
 		}
 		return Constants.USER_NONE;
 	}
 	
 	public String getDisplay(String username, String password) {
+		DatabaseOperations databaseOperations = null;
 		try {
-			DatabaseOperations databaseOperations = DatabaseOperationsImplementation.getInstance();
+			databaseOperations = DatabaseOperationsImplementation.getInstance();
 			List<String> attributes = new ArrayList<>();
-			attributes.add("CONCAT(first_name, ' ', last_name)");
+			attributes.add("CONCAT("+ Constants.FIRST_NAME + ", ' ', " + Constants.LAST_NAME + ")");
 			List<List<String>> display = databaseOperations.getTableContent(table, attributes,
 					Constants.USERNAME + "=\'" + username + "\' AND " + Constants.PASSWORD + "=\'" + password + "\'",
 					null, null, null);
@@ -55,31 +59,26 @@ public class UserManager extends EntityManager {
 			if (Constants.DEBUG) {
 				sqlException.printStackTrace();
 			}
+		} finally {
+			databaseOperations.releaseResources();
 		}
 		
 		return null;
 	}
 	
 	public String verifyRegistration(List<String> values) {
-		if (values.get(4).length() != 13) return Constants.ERROR_PERSONAL_IDENTIFIER;
 		if (values.get(6).length() != 10) return Constants.ERROR_PHONE_NUMBER;
 		
 		Pattern pattern = Pattern.compile(".*@.*.*");
 		Matcher matcher = pattern.matcher(values.get(5));
 		if (!matcher.matches()) return Constants.ERROR_EMAIL;
 		
+		DatabaseOperations databaseOperations = null;
 		try {
-			DatabaseOperations databaseOperations = DatabaseOperationsImplementation.getInstance();
+			databaseOperations = DatabaseOperationsImplementation.getInstance();
 			List<String> attributes = new ArrayList<>();
 			attributes.add(Constants.ID_ATTRIBUTE);
 			List<List<String>> id = databaseOperations.getTableContent(table, attributes,
-					"personal_identifier" + "=\'" + values.get(4) + "\'",
-					null, null, null);
-			if (id != null && !id.isEmpty() && id.get(0) != null && id.get(0).get(0) != null) {
-				return Constants.ERROR_EXISTING_PERSONAL_IDENTIFIER;
-			}
-			
-			id = databaseOperations.getTableContent(table, attributes,
 					Constants.USERNAME + "=\'" + values.get(6) + "\' AND " + Constants.PASSWORD + "=\'" + values.get(1) + "\'",
 					null, null, null);
 			if (id != null && !id.isEmpty() && id.get(0) != null && id.get(0).get(0) != null) {
@@ -90,12 +89,13 @@ public class UserManager extends EntityManager {
 			if (Constants.DEBUG) {
 				sqlException.printStackTrace();
 			}
-		}		
+		} finally {
+			databaseOperations.releaseResources();
+		}	
 		return null;
 	}
 	
 	public String verifyUpdate(List<String> values) {
-		if (values.get(5).length() != 13) return Constants.ERROR_PERSONAL_IDENTIFIER;
 		if ((values.get(7).startsWith("0") && values.get(7).length() != 10) && values.get(7).length() != 9) return Constants.ERROR_PHONE_NUMBER;
 		
 		Pattern pattern = Pattern.compile(".*@.*.*");
@@ -134,7 +134,7 @@ public class UserManager extends EntityManager {
 			List<String> attributes = new ArrayList<>();
 			attributes.add(Constants.USERNAME);
 			List<List<String>> username = databaseOperations.getTableContent(table, attributes,
-					"CONCAT(first_name, \' \', last_name)=\'" + display + "\'", null, null, null);
+					"CONCAT("+ Constants.FIRST_NAME + ", ' ', " + Constants.LAST_NAME + ")=\'" + display + "\'", null, null, null);
 			if (username != null && !username.isEmpty()) {
 				return username.get(0).get(0);
 			}
@@ -150,12 +150,11 @@ public class UserManager extends EntityManager {
 	}
 	
 	public List<String> getInformation(String display) {
-		long identifier = getIdentifier(display);
 		DatabaseOperations databaseOperations = null;
 		try {
 			databaseOperations = DatabaseOperationsImplementation.getInstance();
 			List<List<String>> info = databaseOperations.getTableContent(table, null,
-					"id=\'" + identifier + "\'", null, null, null);
+					"CONCAT("+ Constants.FIRST_NAME + ", ' ', " + Constants.LAST_NAME + ")=\'" + display + "\'", null, null, null);
 			if (info != null && !info.isEmpty() && info.get(0) != null && !info.get(0).isEmpty()) {
 				return info.get(0);
 			}
@@ -170,7 +169,7 @@ public class UserManager extends EntityManager {
 		return null;
 	}
 	
-	public List<List<String>> getDisplayAddresses(String display) {
+	public List<List<String>> getAddresses(String display) {
 		DatabaseOperations databaseOperations = null;
 		List<List<String>> addresses = new ArrayList<>();
 		try {
@@ -178,9 +177,12 @@ public class UserManager extends EntityManager {
 			
 			List<String> attributes = new ArrayList<>();
 			attributes.add("a.id");
-			attributes.add("a.address");
+			attributes.add("a.county");
+			attributes.add("a.city");
+			attributes.add("a.street");
+			attributes.add("a.postal_code");
 			String table = new String("user u, address a");
-			String whereClause = new String("a.user_id=u.id AND CONCAT(first_name, \' \', last_name)=\'" + display + "\'");
+			String whereClause = new String("a.user_id=u.id AND CONCAT("+ Constants.FIRST_NAME + ", ' ', " + Constants.LAST_NAME + ")=\'" + display + "\'");
 			
 			addresses = databaseOperations.getTableContent(table, attributes, whereClause, null, null, null);
 		} catch (SQLException sqlException) {
@@ -192,15 +194,5 @@ public class UserManager extends EntityManager {
 			databaseOperations.releaseResources();
 		}
 		return addresses;
-	}
-	
-	public List<String> getAddresses(String display) {
-		List<String> addressesList = new ArrayList<>();
-		List<List<String>> addresses = getDisplayAddresses(display);
-		for (List<String> address : addresses) {
-			addressesList.add(address.get(1));
-		}
-		
-		return addressesList;
 	}
 }

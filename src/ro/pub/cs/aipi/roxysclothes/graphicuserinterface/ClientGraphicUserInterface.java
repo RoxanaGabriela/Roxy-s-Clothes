@@ -37,14 +37,6 @@ public class ClientGraphicUserInterface {
 		content.append("	<body>\n");
 		content.append("		<h2 style=\"text-align: center\">" + Constants.APPLICATION_NAME.toUpperCase() + "</h2>\n");
 		content.append("		<form action=\"" + Constants.CLIENT_SERVLET_PAGE_CONTEXT + "\" method=\"post\" name=\"" + Constants.CLIENT_FORM + "\">\n");
-		content.append("			<p style=\"text-align:right\">");
-		content.append("				" + Constants.WELCOME_MESSAGE + display + "\n");
-		content.append("				<br/>\n");
-		content.append("				<input type=\"image\" name=\"" + Constants.ACCOUNT.toLowerCase() + "\" value=\"" + Constants.ACCOUNT + "\" src=\"./images/user_interface/account.png\" />\n");
-		content.append("				<br/>\n");
-		content.append("				<input type=\"image\" name=\"" + Constants.SIGNOUT.toLowerCase() + "\" value=\"" + Constants.SIGNOUT + "\" src=\"./images/user_interface/signout.png\" />\n");
-		content.append("				<br/>\n");
-		content.append("			</p>\n");
 		content.append("			<table style=\"width: 50%; text-align:right\">");
 		content.append("				<tbody>");
 		content.append("					<tr>");
@@ -124,11 +116,11 @@ public class ClientGraphicUserInterface {
 		content.append("												<td>\n");		
 		content.append("													<select name=\"" + Constants.CURRENT_SORT+ "\" onchange=\"document." + Constants.CLIENT_FORM + ".submit()\"" + "\" style=\"width: 100%\">\n");
 		List<String> sortList = new ArrayList<>();
-		categoryList.add("Implicit");
-		categoryList.add("Pret crescator");
-		categoryList.add("Pret descrescator");
-		categoryList.add("Data crescator");
-		categoryList.add("Data descrescator");
+		sortList.add("Implicit");
+		sortList.add("Pret crescator");
+		sortList.add("Pret descrescator");
+		sortList.add("Data crescator");
+		sortList.add("Data descrescator");
 		for (String sortAttribute : sortList) {
 			content.append("													<option value=\"" + sortAttribute + "\"" + ((sortAttribute.equals(currentSort)) ? " SELECTED" : "") + ">" + sortAttribute + "</option>\n");
 		}
@@ -170,7 +162,7 @@ public class ClientGraphicUserInterface {
 
 		content.append("						<td>\n");
 		int index = 0;
-		for (List<Record> product : products) {
+		/*for (List<Record> product : products) {
 			index++;
 			if (index < ((currentPage - 1) * currentRecordsPerPage + 1)
 					|| index > (currentPage * currentRecordsPerPage)) {
@@ -211,10 +203,10 @@ public class ClientGraphicUserInterface {
 			content.append("							</div>\n");
 			content.append("							<div id=\"wrapperbottom\"></div>\n");
 			content.append("						</div>\n");
-		}
+		}*/
 		content.append("						</td>\n");
 		content.append("						<td style=\"width: 20%; text-align: left; vertical-align: top;\">\n");
-		content.append("							<div id=\"wrapperrelative\">\n");
+		/*content.append("							<div id=\"wrapperrelative\">\n");
 			content.append("							<div id=\"wrappertop\"></div>\n");
 			content.append("							<div id=\"wrappermiddle\">\n");
 			content.append("								<table style=\"width: 100%;\" border=\"0\" cellpadding=\"4\" cellspacing=\"4\">\n");
@@ -262,7 +254,7 @@ public class ClientGraphicUserInterface {
 				content.append("															<input type=\"image\" name=\"" + Utilities.removeSpaces(Constants.COMPLETE_COMMAND.toLowerCase()) + "\" value=\"" + Constants.COMPLETE_COMMAND + "\" src=\"./images/user_interface/shopping_cart_accept.png\" />\n");
 				content.append("														</td>\n");
 				content.append("													</tr>\n");
-				List<List<String>> addresses = userManager.getDisplayAddresses(display);
+				List<List<String>> addresses = userManager.getAddresses(display);
 				content.append("													<tr>\n");
 				content.append("														<td colspan=\"3\">\n");
 				content.append("															<table>\n");
@@ -303,7 +295,7 @@ public class ClientGraphicUserInterface {
 			content.append("								</table>\n");
 			content.append("							</div>\n");
 			content.append("							<div id=\"wrapperbottom\"></div>\n");
-			content.append("						</div>\n");
+			content.append("						</div>\n");*/
 			content.append("					</td>\n");
 			content.append("				</tr>\n");
 			content.append("			</tbody>\n");

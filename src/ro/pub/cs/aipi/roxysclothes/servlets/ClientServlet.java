@@ -72,11 +72,12 @@ public class ClientServlet extends HttpServlet {
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(true);
-		if (session == null || session.getAttribute(Constants.DISPLAY) == null) {
-			return;
-		}
+
 		try (PrintWriter printWriter = new PrintWriter(response.getWriter())) {
-			String display = session.getAttribute(Constants.DISPLAY).toString();
+			//String display = null;
+			//if (session.getAttribute(Constants.DISPLAY) != null)
+				display = (String) session.getAttribute(Constants.DISPLAY).toString();
+			
 			shoppingCart = (List<Record>) session.getAttribute(Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()));
 			if (shoppingCart == null) {
 				shoppingCart = new ArrayList<>();
@@ -98,13 +99,13 @@ public class ClientServlet extends HttpServlet {
 				}
 				if (parameter.equals(Constants.CURRENT_SORT)) {
 					currentSort = request.getParameter(parameter);
-					if (currentSort.equals("all"))
+					if (currentSort.equals("Implicit"))
 						currentSort = null;
 					filterChange = true;
 				}
 				if (parameter.equals(Constants.CURRENT_CATEGORY)) {
 					currentCategory = request.getParameter(parameter);
-					if (currentCategory.equals("all"))
+					if (currentCategory.equals("-"))
 						currentCategory = null;
 					filterChange = true;
 				}
@@ -125,7 +126,7 @@ public class ClientServlet extends HttpServlet {
 					}
 				}
 				
-				if (parameter
+				/*if (parameter
 						.startsWith(Constants.INSERT_BUTTON_NAME.toLowerCase() + "_"
 								+ Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()) + "_")
 						&& parameter.endsWith(".x")) {
@@ -151,9 +152,9 @@ public class ClientServlet extends HttpServlet {
 					for (Record shoppingCartRecord : shoppingCart) {
 						System.out.println(shoppingCartRecord.getAttribute() + " " + shoppingCartRecord.getValue().toString());
 					}
-				}
+				}*/
 				
-				if (parameter.startsWith(Utilities.removeSpaces(Constants.DELETE_BUTTON_NAME)) && parameter.endsWith(".x")) {
+				/*if (parameter.startsWith(Utilities.removeSpaces(Constants.DELETE_BUTTON_NAME)) && parameter.endsWith(".x")) {
 					String id = parameter.substring(parameter.lastIndexOf("_") + 1,
 							parameter.indexOf(".x"));
 					for (Record shoppingCartRecord : shoppingCart) {
@@ -162,9 +163,9 @@ public class ClientServlet extends HttpServlet {
 							break;
 						}
 					}
-				}
+				}*/
 				
-				if (parameter.startsWith(Utilities.removeSpaces(Constants.UPDATE_BUTTON_NAME)) && parameter.endsWith(".x")) {
+				/*if (parameter.startsWith(Utilities.removeSpaces(Constants.UPDATE_BUTTON_NAME)) && parameter.endsWith(".x")) {
 					String id = parameter.substring(parameter.lastIndexOf("_") + 1,
 							parameter.indexOf(".x"));
 					String value = request.getParameter("order_input_" + id);
@@ -175,16 +176,16 @@ public class ClientServlet extends HttpServlet {
 						}
 					}
 
-				}
+				}*/
 				
-				if (parameter.startsWith(Constants.INSERT_BUTTON_NAME.toLowerCase() + "_" + Constants.ADDRESS + "_")  && parameter.endsWith(".x")) {
+				/*if (parameter.startsWith(Constants.INSERT_BUTTON_NAME.toLowerCase() + "_" + Constants.ADDRESS + "_")  && parameter.endsWith(".x")) {
 					address = parameter.substring(parameter.lastIndexOf("_") + 1,
 							parameter.indexOf(".x"));
 					System.out.println("1");
 					filterChange = true;
-				}
+				}*/
 				
-				if (parameter.equals(Constants.INSERT_BUTTON_NAME.toLowerCase() + "_" + Constants.ADDRESS + ".x")) {
+				/*if (parameter.equals(Constants.INSERT_BUTTON_NAME.toLowerCase() + "_" + Constants.ADDRESS + ".x")) {
 					String addressValue = request.getParameter(Constants.ADDRESS.toLowerCase());
 					List<String> values = new ArrayList<>();
 					values.add(addressValue);
@@ -192,9 +193,9 @@ public class ClientServlet extends HttpServlet {
 					address = addressManager.create(values) + "";
 					System.out.println("2");
 					filterChange = true;
-				}
+				}*/
 				
-				if (parameter.equals(Utilities.removeSpaces(Constants.COMPLETE_COMMAND.toLowerCase()) + ".x")) {
+				/*if (parameter.equals(Utilities.removeSpaces(Constants.COMPLETE_COMMAND.toLowerCase()) + ".x")) {
 					List<String> invoice = new ArrayList<>();
 					invoice.add(LocalDate.now().toString());
 					invoice.add(String.valueOf(userManager.getIdentifier(display)));
@@ -221,14 +222,14 @@ public class ClientServlet extends HttpServlet {
 							errorMessage += Constants.INVALID_COMMAND_ERROR1 + dishId + Constants.INVALID_COMMAND_ERROR2;
 						}
 					}
-				}
+				}*/
 
-				if (parameter.equals(Utilities.removeSpaces(Constants.CANCEL_COMMAND.toLowerCase()) + ".x")) {
+				/*if (parameter.equals(Utilities.removeSpaces(Constants.CANCEL_COMMAND.toLowerCase()) + ".x")) {
 					shoppingCart = new ArrayList<>();
-				}
+				}*/
 				
-				session.setAttribute(Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()), shoppingCart);
-				session.setAttribute(Constants.LABELS_FILTER, labelsFilter);
+				//session.setAttribute(Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()), shoppingCart);
+				//session.setAttribute(Constants.LABELS_FILTER, labelsFilter);
 				
 				if (parameter.equals(Constants.ACCOUNT.toLowerCase() + ".x")) {
 					RequestDispatcher dispatcher = null;
