@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS product (
     producer			VARCHAR(50)		NOT NULL,
     category			VARCHAR(50)		NOT NULL,
     color				VARCHAR(50)		NOT NULL,
-    description			VARCHAR(50)		NOT NULL
+    description			VARCHAR(500)	NOT NULL
 );
 ALTER TABLE product ADD CONSTRAINT product_ck_price_should_be_positive CHECK (price>0);
 ALTER TABLE product ADD CONSTRAINT product_ck_category_possible_values CHECK (type in ('pantaloni', 'bluze', 'tricouri', 'fuste', 'rochii', 'jachete'));
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS invoice_details (
 ALTER TABLE invoice_details ADD CONSTRAINT invoice_details_ck_quantity_should_be_positive CHECK (quantity>0);
 ALTER TABLE invoice_details ADD CONSTRAINT invoice_details_ck_size_possible_values CHECK (type in ('S', 'M', 'L', 'XL', 'XXL'));
 
-INSERT INTO product (name, date, price, currency, producer, category, color, description) VALUES ('Top Z Dana Pink Style', CURDATE(), '45.00', 'LEI', 'Z', 'tricouri', 'roz', 'Top Z roz, se inchide cu capse la spate.\nSpalare la masina max. 30°C.');
+INSERT INTO product (name, date, price, currency, producer, category, color, description) VALUES ('Top Z Dana Pink Style', CURDATE(), '45.00', 'LEI', 'Z', 'tricouri', 'roz', 'Top Z roz, se inchide cu capse la spate.Spalare la masina max. 30°C.');
 INSERT INTO size (size, stockpile, product_id) VALUES ('S', '20', '1');
 INSERT INTO size (size, stockpile, product_id) VALUES ('M', '20', '1');
 INSERT INTO size (size, stockpile, product_id) VALUES ('L', '20', '1');

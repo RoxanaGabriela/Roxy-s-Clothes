@@ -17,10 +17,11 @@ public class ProductManager extends EntityManager {
 	}
 	
 	public List<List<Record>> getCollection(String currentSort, String currentCategory, List<String> labelsFilter) {
+		DatabaseOperations databaseOperations = null;
 		List<List<Record>> result = new ArrayList<>();
 		
 		try {
-			DatabaseOperations databaseOperations = DatabaseOperationsImplementation.getInstance();
+			databaseOperations = DatabaseOperationsImplementation.getInstance();
 			
 			String tableName = new String("product p, fabric f");
 			List<String> attributes = new ArrayList<>();
@@ -29,7 +30,7 @@ public class ProductManager extends EntityManager {
 			attributes.add("p.producer AS producer");
 			attributes.add("p.color AS color");
 			attributes.add("p.description AS description");
-			attributes.add("GROUP_CONCAT(CONCAT(f.percent, '% ', f.name))");
+			attributes.add("GROUP_CONCAT(CONCAT(f.percent, '% ', f.name)) AS fabrics");
 			
 			
 			
@@ -51,31 +52,27 @@ public class ProductManager extends EntityManager {
 				labelsClause = labelsClause.substring(0, labelsClause.length() - 3) + ")";
 			}*/
 			
-			String whereClause = new String("f.product_id=p.id" + dateClause + categoryClause + labelsClause);
+			String whereClause = new String("f.product_id=p.id" + categoryClause);
 			String groupByClause = new String("p.id");
-			List<List<String>> dishes = databaseOperations.getTableContent(tableName, attributes, whereClause, null, null, groupByClause);
+			List<List<String>> products = databaseOperations.getTableContent(tableName, attributes, whereClause, null, null, groupByClause);
 			
-			for (List<String> dish : dishes) {
-				StringTokenizer st = new StringTokenizer(dish.get(0), ";");
-				while (st.hasMoreElements()) {
-					List<Record> r = new ArrayList<>();
-					StringTokenizer st2 = new StringTokenizer(st.nextElement().toString(), ")(");
-					while (st2.hasMoreElements()) {
-						String element = st2.nextElement().toString();
-						String attribute = element.substring(0, element.indexOf(' '));
-						String value = element.substring(element.indexOf(' ') + 1);
-						Record detail = new Record();
-						if (attribute != null && !attribute.isEmpty()) {
-							detail.setAttribute(attribute);
-							detail.setValue(value);
-							r.add(detail);
-						}		
-					}
-					if (r != null && !r.isEmpty()) {
-						r.add(new Record("Date", dish.get(1)));
-						result.add(r);
-					}
-				}
+			for (List<String> product : products) {
+				Record name = new Record("Name", product.get(0));
+				Record price = new Record("Price", product.get(1));
+				Record producer = new Record("Producer", product.get(2));
+				Record color = new Record("Color", product.get(3));
+				Record description = new Record("Description", product.get(4));
+				Record fabrics = new Record("Fabrics", product.get(5));
+				
+				List<Record> details = new ArrayList<>();
+				details.add(name);
+				details.add(price);
+				details.add(producer);
+				details.add(color);
+				details.add(description);
+				details.add(fabrics);
+				
+				result.add(details);
 			}
 			
 		} catch (SQLException sqlException) {
@@ -83,16 +80,18 @@ public class ProductManager extends EntityManager {
 			if (Constants.DEBUG) {
 				sqlException.printStackTrace();
 			}
-			return null;
+		} finally {
+			databaseOperations.releaseResources();
 		}
 		return result;
 	}
 	
 	public Record getInformation(long identifier) {
+		DatabaseOperations databaseOperations = null;
 		Record result = new Record();
 		
 		try {
-			DatabaseOperations databaseOperations = DatabaseOperationsImplementation.getInstance();
+			databaseOperations = DatabaseOperationsImplementation.getInstance();
 			
 			List<String> attributes = new ArrayList<>();
 			attributes.add("name");
@@ -104,26 +103,26 @@ public class ProductManager extends EntityManager {
 			if (info != null && !info.isEmpty() && info.get(0) != null && !info.get(0).isEmpty()) {
 				result.setAttribute(info.get(0).get(0));
 				result.setValue(Double.parseDouble(info.get(0).get(1)));
-			}
-			
+			}		
 		} catch (SQLException sqlException) {
 			System.out.println("An exception has occurred while handling database records: " + sqlException.getMessage());
 			if (Constants.DEBUG) {
 				sqlException.printStackTrace();
 			}
-			return null;
+		} finally {
+			databaseOperations.releaseResources();
 		}
 		return result;
 	}
 	
-	public int getStockpile(long id) {
+	public int getStockpile(long id, String size) {
 		DatabaseOperations databaseOperations = null;
 		try {
 			databaseOperations = DatabaseOperationsImplementation.getInstance();
 			List<String> attributes = new ArrayList<>();
-			attributes.add("stockpile");
-			List<List<String>> content = databaseOperations.getTableContent(table, attributes,
-					"id=\'" + id + "\'", null, null, null);
+			attributes.add("s.stockpile");
+			List<List<String>> content = databaseOperations.getTableContent("products p, size s", attributes,
+					"p.id=\'" + id + "\' AND s.product_id=p.id AND s.size=\'" + size + "\'", null, null, null);
 			if (content == null || content.size() != 1) {
 				if (Constants.DEBUG) {
 					System.out.format("The query returned a different number of results than expected (%d)!%n",
@@ -141,5 +140,26 @@ public class ProductManager extends EntityManager {
 			databaseOperations.releaseResources();
 		}
 		return -1;
+	}
+	
+	public List<String> getSizes(long id) {
+		DatabaseOperations databaseOperations = null;
+		try {
+			databaseOperations = DatabaseOperationsImplementation.getInstance();
+			List<String> attributes = new ArrayList<>();
+			attributes.add("s.size");
+			List<List<String>> content = databaseOperations.getTableContent("products p, size s", attributes,
+					"p.id=\'" + id + "\' AND s.product_id=p.id", null, null, null);
+			
+			return content.get(0);
+		} catch (SQLException sqlException) {
+			System.out.println("An exception has occurred: " + sqlException.getMessage());
+			if (Constants.DEBUG) {
+				sqlException.printStackTrace();
+			}
+		} finally {
+			databaseOperations.releaseResources();
+		}
+		return null;
 	}
 }

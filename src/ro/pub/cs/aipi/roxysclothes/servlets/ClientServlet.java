@@ -29,7 +29,7 @@ public class ClientServlet extends HttpServlet {
 	final public static long serialVersionUID = 10021002L;
 
 	private UserManager userManager;
-	private ProductManager dishManager;
+	private ProductManager productManager;
 	private InvoiceManager invoiceManager;
 	private InvoiceDetailsManager invoiceDetailsManager;
 	private AddressManager addressManager;
@@ -49,7 +49,7 @@ public class ClientServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		userManager = new UserManager();
-		dishManager = new ProductManager();
+		productManager = new ProductManager();
 		invoiceManager = new InvoiceManager();
 		invoiceDetailsManager = new InvoiceDetailsManager();
 		addressManager = new AddressManager();
@@ -74,8 +74,8 @@ public class ClientServlet extends HttpServlet {
 		HttpSession session = request.getSession(true);
 
 		try (PrintWriter printWriter = new PrintWriter(response.getWriter())) {
-			//String display = null;
-			//if (session.getAttribute(Constants.DISPLAY) != null)
+			String display = null;
+			if (session.getAttribute(Constants.DISPLAY) != null)
 				display = (String) session.getAttribute(Constants.DISPLAY).toString();
 			
 			shoppingCart = (List<Record>) session.getAttribute(Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()));
@@ -100,7 +100,7 @@ public class ClientServlet extends HttpServlet {
 				if (parameter.equals(Constants.CURRENT_SORT)) {
 					currentSort = request.getParameter(parameter);
 					if (currentSort.equals("Implicit"))
-						currentSort = null;
+						currentSort = "p.name";
 					filterChange = true;
 				}
 				if (parameter.equals(Constants.CURRENT_CATEGORY)) {
@@ -204,13 +204,13 @@ public class ClientServlet extends HttpServlet {
 					for (Record shoppingCartRecord : shoppingCart) {
 						long dishId = Long.parseLong(shoppingCartRecord.getAttribute());
 						int quantity = Integer.parseInt(shoppingCartRecord.getValue().toString());
-						int stockpile = dishManager.getStockpile(dishId);
+						int stockpile = productManager.getStockpile(dishId);
 						if (quantity <= stockpile) {
 							List<String> dishAttributes = new ArrayList<>();
 							dishAttributes.add("stockpile");
 							List<String> dishValues = new ArrayList<>();
 							dishValues.add(String.valueOf(stockpile - quantity));
-							dishManager.update(dishAttributes, dishValues,
+							productManager.update(dishAttributes, dishValues,
 									dishId);
 							List<String> invoiceDetails = new ArrayList<>();
 							invoiceDetails.add(String.valueOf(invoiceId));
@@ -231,15 +231,15 @@ public class ClientServlet extends HttpServlet {
 				//session.setAttribute(Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()), shoppingCart);
 				//session.setAttribute(Constants.LABELS_FILTER, labelsFilter);
 				
-				if (parameter.equals(Constants.ACCOUNT.toLowerCase() + ".x")) {
+				/*if (parameter.equals(Constants.ACCOUNT.toLowerCase() + ".x")) {
 					RequestDispatcher dispatcher = null;
 					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.ACCOUNT_SERVLET_PAGE_CONTEXT);
 					if (dispatcher != null) {
 						dispatcher.forward(request, response);
 					}
-				}
+				}*/
 				
-				if (parameter.equals(Constants.SIGNOUT.toLowerCase() + ".x")) {
+				/*if (parameter.equals(Constants.SIGNOUT.toLowerCase() + ".x")) {
 					Enumeration<String> requestParameters = request.getParameterNames();
 					while (requestParameters.hasMoreElements()) {
 						request.removeAttribute(requestParameters.nextElement());
@@ -257,11 +257,11 @@ public class ClientServlet extends HttpServlet {
 					}
 					session.invalidate();
 					break;
-				}
+				}*/
 			}
 			
 			if (products == null || filterChange) {
-				products = dishManager.getCollection(currentSort, currentCategory, labelsFilter);
+				products = productManager.getCollection(currentSort, currentCategory, labelsFilter);
 			}
 			
 			ClientGraphicUserInterface.displayClientGraphicUserInterface(display, products,

@@ -162,7 +162,7 @@ public class ClientGraphicUserInterface {
 
 		content.append("						<td>\n");
 		int index = 0;
-		/*for (List<Record> product : products) {
+		for (List<Record> product : products) {
 			index++;
 			if (index < ((currentPage - 1) * currentRecordsPerPage + 1)
 					|| index > (currentPage * currentRecordsPerPage)) {
@@ -203,7 +203,7 @@ public class ClientGraphicUserInterface {
 			content.append("							</div>\n");
 			content.append("							<div id=\"wrapperbottom\"></div>\n");
 			content.append("						</div>\n");
-		}*/
+		}
 		content.append("						</td>\n");
 		content.append("						<td style=\"width: 20%; text-align: left; vertical-align: top;\">\n");
 		/*content.append("							<div id=\"wrapperrelative\">\n");
