@@ -3,58 +3,129 @@
 	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	id="WebApp_ID" version="3.0">
-	<display-name>Restaurant</display-name>
+	<display-name>Roxy's Shop</display-name>
 	<welcome-file-list>
-		<welcome-file>ClientServlet</welcome-file>
+		<welcome-file>NotLoggedInClientServlet</welcome-file>
 	</welcome-file-list>
-	<servlet>
-		<description></description>
-		<display-name>LoginServlet</display-name>
-		<servlet-name>LoginServlet</servlet-name>
-		<servlet-class>ro.pub.cs.aipi.roxysclothes.servlets.LoginServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>LoginServlet</servlet-name>
-		<url-pattern>/LoginServlet</url-pattern>
-	</servlet-mapping>
-	<servlet>
-		<description></description>
-		<display-name>RegisterServlet</display-name>
-		<servlet-name>RegisterServlet</servlet-name>
-		<servlet-class>ro.pub.cs.aipi.roxysclothes.servlets.RegisterServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>RegisterServlet</servlet-name>
-		<url-pattern>/RegisterServlet</url-pattern>
-	</servlet-mapping>
+
 	<servlet>
 		<description></description>
 		<display-name>NotLoggedInClientServlet</display-name>
 		<servlet-name>NotLoggedInClientServlet</servlet-name>
-		<servlet-class>ro.pub.cs.aipi.roxysclothes.servlets.NotLoggedInClientServlet</servlet-class>
+		<servlet-class>roxysshop.servlets.NotLoggedInClientServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>NotLoggedInClientServlet</servlet-name>
 		<url-pattern>/NotLoggedInClientServlet</url-pattern>
 	</servlet-mapping>
+	
 	<servlet>
 		<description></description>
 		<display-name>ClientServlet</display-name>
 		<servlet-name>ClientServlet</servlet-name>
-		<servlet-class>ro.pub.cs.aipi.roxysclothes.servlets.ClientServlet</servlet-class>
+		<servlet-class>roxysshop.servlets.ClientServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ClientServlet</servlet-name>
 		<url-pattern>/ClientServlet</url-pattern>
 	</servlet-mapping>
+	
 	<servlet>
 		<description></description>
-		<display-name>AccountServlet</display-name>
-		<servlet-name>AccountServlet</servlet-name>
-		<servlet-class>ro.pub.cs.aipi.roxysclothes.servlets.AccountServlet</servlet-class>
+		<display-name>LoginServlet</display-name>
+		<servlet-name>LoginServlet</servlet-name>
+		<servlet-class>roxysshop.servlets.LoginServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>AccountServlet</servlet-name>
-		<url-pattern>/AccountServlet</url-pattern>
+		<servlet-name>LoginServlet</servlet-name>
+		<url-pattern>/LoginServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<description></description>
+		<display-name>RegisterServlet</display-name>
+		<servlet-name>RegisterServlet</servlet-name>
+		<servlet-class>roxysshop.servlets.RegisterServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>RegisterServlet</servlet-name>
+		<url-pattern>/RegisterServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<description></description>
+		<display-name>ShoppingCartServlet</display-name>
+		<servlet-name>ShoppingCartServlet</servlet-name>
+		<servlet-class>roxysshop.servlets.ShoppingCartServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ShoppingCartServlet</servlet-name>
+		<url-pattern>/ShoppingCartServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<description></description>
+		<display-name>HistoryServlet</display-name>
+		<servlet-name>HistoryServlet</servlet-name>
+		<servlet-class>roxysshop.servlets.HistoryServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>HistoryServlet</servlet-name>
+		<url-pattern>/HistoryServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<description></description>
+		<display-name>UpdateServlet</display-name>
+		<servlet-name>UpdateServlet</servlet-name>
+		<servlet-class>roxysshop.servlets.UpdateServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UpdateServlet</servlet-name>
+		<url-pattern>/UpdateServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<description></description>
+		<display-name>InvoicesHistoryServlet</display-name>
+		<servlet-name>InvoicesHistoryServlet</servlet-name>
+		<servlet-class>roxysshop.servlets.InvoicesHistoryServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>InvoicesHistoryServlet</servlet-name>
+		<url-pattern>/InvoicesHistoryServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<description></description>
+		<display-name>ClientsServlet</display-name>
+		<servlet-name>ClientsServlet</servlet-name>
+		<servlet-class>roxysshop.servlets.ClientsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ClientsServlet</servlet-name>
+		<url-pattern>/ClientsServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<description></description>
+		<display-name>ProductsServlet</display-name>
+		<servlet-name>ProductsServlet</servlet-name>
+		<servlet-class>roxysshop.servlets.ProductsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ProductsServlet</servlet-name>
+		<url-pattern>/ProductsServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<description></description>
+		<display-name>NewProductServlet</display-name>
+		<servlet-name>NewProductServlet</servlet-name>
+		<servlet-class>roxysshop.servlets.NewProductServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>NewProductServlet</servlet-name>
+		<url-pattern>/NewProductServlet</url-pattern>
 	</servlet-mapping>
 </web-app>
