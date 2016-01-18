@@ -18,7 +18,6 @@ import roxysshop.businesslogic.AddressManager;
 import roxysshop.businesslogic.UserManager;
 import roxysshop.general.Constants;
 import roxysshop.graphicuserinterface.RegisterGraphicUserInterface;
-import roxysshop.helper.Record;
 
 public class RegisterServlet extends HttpServlet {
 
@@ -59,7 +58,7 @@ public class RegisterServlet extends HttpServlet {
 			values.add(Constants.PASSWORD);
 			
 			registerError = null;
-			addresses = new ArrayList<>();
+			if (addresses == null) addresses = new ArrayList<>();
 			
 			Enumeration<String> parameters = request.getParameterNames();
 			boolean found = true;

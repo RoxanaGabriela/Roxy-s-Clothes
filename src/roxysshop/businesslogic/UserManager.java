@@ -24,6 +24,38 @@ public class UserManager extends EntityManager {
 		return super.create(values);
 	}
 	
+	@Override
+	public int update(List<String> values, long id) {
+		DatabaseOperations databaseOperations = null;
+		
+		try {
+			databaseOperations = DatabaseOperationsImplementation.getInstance();
+			
+			List<String> attributes = new ArrayList<>();
+			attributes.add("type");
+			attributes.add("notified");
+			List<List<String>> content = databaseOperations.getTableContent(table, attributes,
+					"id=\'" + id + "\'",
+					null, null, null);
+			
+			if (content != null && !content.isEmpty()) {
+				values.add(content.get(0).get(0));
+				values.add(content.get(0).get(1));
+				
+				return super.update(values, id);
+			}
+		} catch (SQLException sqlException) {
+			System.out.println("An exception has occurred: " + sqlException.getMessage());
+			if (Constants.DEBUG) {
+				sqlException.printStackTrace();
+			}
+		} finally {
+			databaseOperations.releaseResources();
+		}
+		
+		return -1;
+	}
+	
 	public int verifyUser(String username, String password) {
 		DatabaseOperations databaseOperations = null;
 		int result = Constants.USER_NONE;

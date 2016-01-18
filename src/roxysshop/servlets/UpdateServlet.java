@@ -63,6 +63,7 @@ public class UpdateServlet extends HttpServlet {
 		}
 		try (PrintWriter printWriter = new PrintWriter(response.getWriter())) {
 			String display = session.getAttribute(Constants.DISPLAY).toString();
+			if (addresses == null) addresses = addressManager.getAddresses(userManager.getIdentifier(display));
 				
 			boolean found = true;
 			Enumeration<String> parameters = request.getParameterNames();
@@ -135,6 +136,18 @@ public class UpdateServlet extends HttpServlet {
 					//TODO
 				}
 				
+				if (parameter.equals(Constants.UPDATE.toLowerCase() + ".x")) {
+					//TODO
+				}
+				
+				if (parameter.equals(Constants.HISTORY.toLowerCase() + ".x")) {
+					RequestDispatcher dispatcher = null;
+					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.HISTORY_SERVLET_PAGE_CONTEXT);
+					if (dispatcher != null) {
+						dispatcher.forward(request, response);
+					}
+				}
+				
 				if (parameter.equals(Constants.SHOPPING_CART.toLowerCase() + ".x")) {
 					RequestDispatcher dispatcher = null;
 					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.SHOPPING_CART_SERVLET_PAGE_CONTEXT);
@@ -166,7 +179,7 @@ public class UpdateServlet extends HttpServlet {
 					values.add(email);
 					values.add(userManager.getUsername(display));
 					values.add(password);
-					if (found == false) UpdateGraphicUserInterface.displayAccountGraphicUserInterface(display, Constants.ERROR_EMPTY_FIELDS, printWriter);
+					if (found == false) UpdateGraphicUserInterface.displayUpdateGraphicUserInterface(display, addresses, Constants.ERROR_EMPTY_FIELDS, printWriter);
 					else {
 						updateError = isUpdateError(values);
 						if (updateError == null) {
@@ -184,7 +197,7 @@ public class UpdateServlet extends HttpServlet {
 					}
 				}
 			}
-			UpdateGraphicUserInterface.displayAccountGraphicUserInterface(display, updateError, printWriter);
+			UpdateGraphicUserInterface.displayUpdateGraphicUserInterface(display, addresses, updateError, printWriter);
 		}
 	}
 

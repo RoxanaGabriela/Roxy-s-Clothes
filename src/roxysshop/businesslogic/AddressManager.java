@@ -22,7 +22,7 @@ public class AddressManager extends EntityManager {
 		try {
 			databaseOperations = DatabaseOperationsImplementation.getInstance();
 			List<List<String>> content = databaseOperations.getTableContent(table, null,
-					"id=\'" + userId + "\'", null, null, null);
+					"user_id=\'" + userId + "\'", null, null, null);
 			if (content != null && !content.isEmpty()) {
 				for (List<String> field : content) {
 					addresses.add(new Record(field.get(0), field.get(1)));

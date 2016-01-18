@@ -3,22 +3,18 @@ package roxysshop.graphicuserinterface;
 import java.io.PrintWriter;
 import java.util.List;
 
-import roxysshop.businesslogic.AddressManager;
-import roxysshop.businesslogic.InvoiceManager;
 import roxysshop.businesslogic.UserManager;
 import roxysshop.general.Constants;
-import roxysshop.general.Utilities;
 import roxysshop.helper.Record;
 
 public class UpdateGraphicUserInterface {
 
-	private static AddressManager addressManager = new AddressManager();
 	private static UserManager userManager = new UserManager();
 	
 	public UpdateGraphicUserInterface() {
 	}
 
-	public static void displayAccountGraphicUserInterface(String display, String isUpdateError, PrintWriter printWriter) {
+	public static void displayUpdateGraphicUserInterface(String display, List<Record> addresses, String isUpdateError, PrintWriter printWriter) {
 		StringBuilder content = new StringBuilder();
 		List<String> values = userManager.getInformation(display);
 		content.append(
@@ -58,6 +54,28 @@ public class UpdateGraphicUserInterface {
 		content.append("			<table border=\"0\" cellpadding=\"4\" cellspacing=\"1\" style=\"width: 50%; background-image: url(./images/user_interface/background.jpg); margin: 0px auto;\">\n");
 		content.append("				<tbody>\n");
 		content.append("					<tr>\n");
+		content.append("						<td style=\"width: 10%; text-align: left; vertical-align: top;\">\n");
+		content.append("							<div id=\"wrapperrelative\">\n");
+		content.append("								<div id=\"wrappertop\"></div>\n");
+		content.append("								<div id=\"wrappermiddle\">\n");
+		content.append("									<table border=\"0\" cellpadding=\"4\" cellspacing=\"1\">\n");
+		content.append("										<tbody>\n");
+		content.append("											<tr>\n");
+		content.append("												<td>\n");
+		content.append("													<input type=\"image\" name=\"" + Constants.UPDATE.toLowerCase() + "\" value=\"" + Constants.UPDATE + "\" src=\"./images/user_interface/home.png\" />\n");
+		content.append("												</td>\n");
+		content.append("											</tr>\n");
+		content.append("											<tr>\n");
+		content.append("												<td>\n");	
+		content.append("													<input type=\"image\" name=\"" + Constants.HISTORY.toLowerCase() + "\" value=\"" + Constants.HISTORY + "\" src=\"./images/user_interface/home.png\" />\n");
+		content.append("												</td>\n");
+		content.append("											</tr>\n");
+		content.append("										</tbody>\n");
+		content.append("									</table>\n");
+		content.append("								</div>\n");
+		content.append("								<div id=\"wrapperbottom\"></div>\n");
+		content.append("							</div>\n");
+		content.append("						</td>\n");
 		content.append("						<td>\n");
 		content.append("							<div id=\"wrapperrelative\">\n");
 		content.append("								<div id=\"wrappertop\"></div>\n");
@@ -120,7 +138,6 @@ public class UpdateGraphicUserInterface {
 		content.append("													</table>\n");
 		content.append("												</td>\n");
 		content.append("												<td>\n");
-		List<Record> addresses = addressManager.getAddresses(userManager.getIdentifier(display));
 		content.append("													<table>\n");
 		content.append("														<tbody>\n");
 		content.append("															<tr>\n");
@@ -171,42 +188,6 @@ public class UpdateGraphicUserInterface {
 		content.append("								</div>\n");
 		content.append("								<div id=\"wrapperbottom\"></div>\n");
 		content.append("							</div>\n");
-		content.append("						</td>\n");
-		content.append("					</tr>\n");
-		content.append("					<tr>\n");
-		content.append("						<td>\n");
-		/*List<List<Record>> invoices = invoiceManager.getInvoices(userManager.getIdentifier(username));
-		System.out.println(invoices);
-		for (List<Record> invoice : invoices) {
-			content.append("						<div id=\"wrapperrelative\">\n");
-			content.append("							<div id=\"wrappertop\"></div>\n");
-			content.append("							<div id=\"wrappermiddle\">\n");
-			content.append("								<table style=\"width: 100%;\" border=\"0\" cellpadding=\"4\" cellspacing=\"4\">\n");
-			content.append("									<tbody>\n");
-			content.append("										<tr>\n");
-			content.append("											<td>\n");
-			content.append("												<table style=\"width: 100%;\" border=\"0\" cellpadding=\"4\" cellspacing=\"4\">\n");
-			content.append("													<tbody>\n");
-			content.append("														<tr>\n");
-			content.append("															<td>&nbsp;</td>\n");
-			content.append("															<td style=\"text-align: left;\">\n");
-			for (Record field : invoice) {
-				content.append("															<b>" + field.getAttribute() + "</b>: " + field.getValue() + "\n");
-				content.append("															<br/>\n");
-			}
-			content.append("																<br/>\n");
-			content.append("															</td>\n");
-			content.append("														</tr>\n");
-			content.append("													</tbody>\n");
-			content.append("												</table>\n");
-			content.append("											</td>\n");
-			content.append("										</tr>\n");
-			content.append("									</tbody>\n");
-			content.append("								</table>\n");
-			content.append("							</div>\n");
-			content.append("							<div id=\"wrapperbottom\"></div>\n");
-			content.append("						</div>\n");
-		}*/
 		content.append("						</td>\n");
 		content.append("					</tr>\n");
 		content.append("				</tbody>\n");

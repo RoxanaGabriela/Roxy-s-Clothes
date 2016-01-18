@@ -25,7 +25,7 @@ public class InvoiceManager extends EntityManager {
 			attributes.add("i.id");
 			attributes.add("i.date");
 			attributes.add("GROUP_CONCAT(CONCAT(p.name, ' x ', id.quantity, ' = ', p.price, ' ', p.currency, ';'))");
-			attributes.add("CONCAT(a.street, ', ', a.city, ', ', a.county, ', ', a.postal_code)");
+			attributes.add("a.address");
 			String table = new String("invoice i, invoice_details id, user u, product p, address a");
 			String whereClause = new String("i.id=id.invoice_id AND u.id=i.user_id AND p.id=id.product_id AND a.id=i.address_id AND u.id=\'" + userId + "\'");
 			String groupByClause = new String("i.id");
