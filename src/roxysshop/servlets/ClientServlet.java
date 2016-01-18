@@ -2,7 +2,6 @@ package roxysshop.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -15,23 +14,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import roxysshop.businesslogic.AddressManager;
-import roxysshop.businesslogic.InvoiceDetailsManager;
-import roxysshop.businesslogic.InvoiceManager;
 import roxysshop.businesslogic.ProductManager;
-import roxysshop.businesslogic.UserManager;
 import roxysshop.general.Constants;
 import roxysshop.general.Utilities;
 import roxysshop.graphicuserinterface.ClientGraphicUserInterface;
-import roxysshop.graphicuserinterface.NotLoggedInClientGraphicUserInterface;
 import roxysshop.helper.Record;
 
 public class ClientServlet extends HttpServlet {
 	final public static long serialVersionUID = 10021002L;
 
-	private UserManager userManager;
 	private ProductManager productManager;
-	private AddressManager addressManager;
 	
 	List<List<Record>> products;
 	private String previousRecordsPerPage;
@@ -41,14 +33,12 @@ public class ClientServlet extends HttpServlet {
 	private String currentSort;
 	private String currentSearch;
 	private List<String> labelsFilter;
-	private List<Record> shoppingCart;
+	private List<List<String>> shoppingCart;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		userManager = new UserManager();
 		productManager = new ProductManager();
-		addressManager = new AddressManager();
 		
 		previousRecordsPerPage = String.valueOf(Constants.RECORDS_PER_PAGE_VALUES[0]);
 		currentRecordsPerPage = String.valueOf(Constants.RECORDS_PER_PAGE_VALUES[0]);
@@ -73,7 +63,7 @@ public class ClientServlet extends HttpServlet {
 		try (PrintWriter printWriter = new PrintWriter(response.getWriter())) {
 			String sortBy = new String("name ASC");
 			String display = session.getAttribute(Constants.DISPLAY).toString();
-			shoppingCart = (List<Record>) session.getAttribute(Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()));
+			shoppingCart = (List<List<String>>) session.getAttribute(Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()));
 			if (shoppingCart == null) {
 				shoppingCart = new ArrayList<>();
 			}
@@ -137,102 +127,26 @@ public class ClientServlet extends HttpServlet {
 							parameter.indexOf(".x"));
 					String quantity = request.getParameter(Constants.COPIES.toLowerCase() + "_"
 							+ Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()) + "_" + id);
+					String size = request.getParameter(Constants.CURRENT_SIZE + "_" + id);
 					boolean found = false;
-					for (Record shoppingCartRecord : shoppingCart) {
-						if (shoppingCartRecord.getAttribute().equals(id)) {
+					for (List<String> shoppingCartRecord : shoppingCart) {
+						if (shoppingCartRecord.get(0).equals(id) && shoppingCartRecord.get(2).equals(size)) {
 							found = true;
 							if (Integer.parseInt(quantity) == 0) {
 								shoppingCart.remove(shoppingCartRecord);
 							} else {
-								shoppingCartRecord.setValue(quantity);
+								shoppingCartRecord.set(1, quantity);
 							}
 							break;
 						}
 					}
 					if (!found && Integer.parseInt(quantity) != 0) {
-						shoppingCart.add(new Record(id, quantity));
+						List<String> record = new ArrayList<>();
+						record.add(id);
+						record.add(quantity);
+						record.add(size);
+						shoppingCart.add(record);
 					}
-					for (Record shoppingCartRecord : shoppingCart) {
-						System.out.println(shoppingCartRecord.getAttribute() + " " + shoppingCartRecord.getValue().toString());
-					}
-				}
-				
-				if (parameter.startsWith(Utilities.removeSpaces(Constants.DELETE_BUTTON_NAME)) && parameter.endsWith(".x")) {
-					String id = parameter.substring(parameter.lastIndexOf("_") + 1,
-							parameter.indexOf(".x"));
-					for (Record shoppingCartRecord : shoppingCart) {
-						if (shoppingCartRecord.getAttribute().equals(id)) {
-							shoppingCart.remove(shoppingCartRecord);
-							break;
-						}
-					}
-				}
-				
-				if (parameter.startsWith(Utilities.removeSpaces(Constants.UPDATE_BUTTON_NAME)) && parameter.endsWith(".x")) {
-					String id = parameter.substring(parameter.lastIndexOf("_") + 1,
-							parameter.indexOf(".x"));
-					String value = request.getParameter("order_input_" + id);
-					for (Record shoppingCartRecord : shoppingCart) {
-						if (shoppingCartRecord.getAttribute().equals(id)) {
-							shoppingCartRecord.setValue(value);
-							break;
-						}
-					}
-
-				}
-				
-				/*if (parameter.startsWith(Constants.INSERT_BUTTON_NAME.toLowerCase() + "_" + Constants.ADDRESS + "_")  && parameter.endsWith(".x")) {
-					address = parameter.substring(parameter.lastIndexOf("_") + 1,
-							parameter.indexOf(".x"));
-					System.out.println("1");
-					filterChange = true;
-				}
-				
-				if (parameter.equals(Constants.INSERT_BUTTON_NAME.toLowerCase() + "_" + Constants.ADDRESS + ".x")) {
-					String addressValue = request.getParameter(Constants.ADDRESS.toLowerCase());
-					List<String> values = new ArrayList<>();
-					values.add(addressValue);
-					values.add(userManager.getIdentifier(display) + "");
-					address = addressManager.create(values) + "";
-					System.out.println("2");
-					filterChange = true;
-				}*/
-				
-				/*if (parameter.equals(Utilities.removeSpaces(Constants.COMPLETE_COMMAND.toLowerCase()) + ".x")) {
-					if (address != null && !address.isEmpty()) {
-						List<String> invoice = new ArrayList<>();
-						invoice.add(LocalDate.now().toString());
-						invoice.add(String.valueOf(userManager.getIdentifier(display)));
-						invoice.add(address);
-						long invoiceId = invoiceManager.create(invoice);
-						for (Record shoppingCartRecord : shoppingCart) {
-							long dishId = Long.parseLong(shoppingCartRecord.getAttribute());
-							int quantity = Integer.parseInt(shoppingCartRecord.getValue().toString());
-							int stockpile = productManager.getStockpile(dishId);
-							if (quantity <= stockpile) {
-								List<String> dishAttributes = new ArrayList<>();
-								dishAttributes.add("stockpile");
-								List<String> dishValues = new ArrayList<>();
-								dishValues.add(String.valueOf(stockpile - quantity));
-								dishManager.update(dishAttributes, dishValues,
-										dishId);
-								List<String> invoiceDetails = new ArrayList<>();
-								invoiceDetails.add(String.valueOf(invoiceId));
-								invoiceDetails.add(String.valueOf(dishId));
-								invoiceDetails.add(String.valueOf(quantity));
-								invoiceDetailsManager.create(invoiceDetails);
-								shoppingCart = new ArrayList<>();
-							} else {
-								errorMessage = Constants.INVALID_COMMAND_ERROR1 + dishId + Constants.INVALID_COMMAND_ERROR2;
-							}
-						}
-					} else {
-							errorMessage = Constants.INVALID_COMMAND_ERROR3;
-					}
-				}*/
-
-				if (parameter.equals(Utilities.removeSpaces(Constants.CANCEL_COMMAND.toLowerCase()) + ".x")) {
-					shoppingCart = new ArrayList<>();
 				}
 				
 				session.setAttribute(Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()), shoppingCart);

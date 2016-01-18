@@ -19,7 +19,7 @@ public class ClientGraphicUserInterface {
 	}
 
 	public static void displayClientGraphicUserInterface(String display, List<List<Record>> products,
-			List<Record> shoppingCart, int currentRecordsPerPage, int currentPage, String currentSort,
+			List<List<String>> shoppingCart, int currentRecordsPerPage, int currentPage, String currentSort,
 			String currentCategory, List<String> labelsFilter, String currentSearch, 
 			boolean filterChange, PrintWriter printWriter) {
 		StringBuilder content = new StringBuilder();
@@ -189,7 +189,7 @@ public class ClientGraphicUserInterface {
 			content.append("														<tr>\n");
 			content.append("															<td>" + Constants.SIZE + "</td>\n");
 			content.append("															<td>\n");		
-			content.append("																<select name=\"" + Constants.CURRENT_SIZE+ "\" onchange=\"document." + Constants.CLIENT_FORM + ".submit()\"" + "\" style=\"width: 100%\">\n");
+			content.append("																<select name=\"" + Constants.CURRENT_SIZE + "_" + currentIdentifier + "\" onchange=\"document." + Constants.CLIENT_FORM + ".submit()\"" + "\" style=\"width: 100%\">\n");
 			List<String> sizeList = sizeManager.getSizes(Long.parseLong(currentIdentifier));
 			for (String sizeAttribute : sizeList) {
 				content.append("																<option value=\"" + sizeAttribute + "\"" + ((sizeAttribute.equals(currentCategory)) ? " SELECTED" : "") + ">" + sizeAttribute + "</option>\n");

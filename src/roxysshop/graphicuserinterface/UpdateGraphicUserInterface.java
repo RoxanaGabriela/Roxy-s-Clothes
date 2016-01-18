@@ -115,7 +115,7 @@ public class UpdateGraphicUserInterface {
 		content.append("																	<p>" + Constants.EMAIL + ": </p>\n");
 		content.append("																</td>\n");
 		content.append("																<td>\n");
-		content.append("																	<input type=\"text\" name=\"" + Constants.EMAIL + "\" id=\"url\" value=\"" + values.get(4) + "\" onclick=\"this.value = ''\">\n");
+		content.append("																	<input type=\"text\" name=\"" + Constants.EMAIL + "\" id=\"url\" value=\"" + values.get(4) + "\" readonly>\n");
 		content.append("																</td>\n");
 		content.append("															</tr>\n");
 		content.append("															<tr>\n");
@@ -123,7 +123,7 @@ public class UpdateGraphicUserInterface {
 		content.append("																	<p>" + Constants.USERNAME + ": </p>\n");
 		content.append("																</td>\n");
 		content.append("																<td>\n");
-		content.append("																	<p>" + values.get(5) + "</p>\n");
+		content.append("																	<input type=\"text\" name=\"" + Constants.USERNAME + "\" id=\"url\" value=\"" + values.get(5) + "\" onclick=\"this.value = ''\">\n");
 		content.append("																</td>\n");
 		content.append("															</tr>\n");
 		content.append("															<tr>\n");

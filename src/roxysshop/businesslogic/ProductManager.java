@@ -3,7 +3,6 @@ package roxysshop.businesslogic;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import roxysshop.dataaccess.DatabaseOperations;
 import roxysshop.dataaccess.DatabaseOperationsImplementation;
@@ -153,32 +152,5 @@ public class ProductManager extends EntityManager {
 			databaseOperations.releaseResources();
 		}
 		return null;
-	}
-	
-	public int getStockpile(long id, String size) {
-		DatabaseOperations databaseOperations = null;
-		try {
-			databaseOperations = DatabaseOperationsImplementation.getInstance();
-			List<String> attributes = new ArrayList<>();
-			attributes.add("s.stockpile");
-			List<List<String>> content = databaseOperations.getTableContent("products p, size s", attributes,
-					"p.id=\'" + id + "\' AND s.product_id=p.id AND s.size=\'" + size + "\'", null, null, null);
-			if (content == null || content.size() != 1) {
-				if (Constants.DEBUG) {
-					System.out.format("The query returned a different number of results than expected (%d)!%n",
-							content.size());
-				}
-				return -1;
-			}
-			return Integer.parseInt(content.get(0).get(0));
-		} catch (SQLException sqlException) {
-			System.out.println("An exception has occurred: " + sqlException.getMessage());
-			if (Constants.DEBUG) {
-				sqlException.printStackTrace();
-			}
-		} finally {
-			databaseOperations.releaseResources();
-		}
-		return -1;
 	}
 }

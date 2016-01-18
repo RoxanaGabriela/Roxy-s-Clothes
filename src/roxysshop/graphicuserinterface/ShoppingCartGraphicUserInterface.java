@@ -6,6 +6,7 @@ import java.util.List;
 
 import roxysshop.businesslogic.ProductManager;
 import roxysshop.businesslogic.SizeManager;
+import roxysshop.businesslogic.UserManager;
 import roxysshop.general.Constants;
 import roxysshop.general.Utilities;
 import roxysshop.helper.Record;
@@ -13,13 +14,14 @@ import roxysshop.helper.Record;
 public class ShoppingCartGraphicUserInterface {
 	public static SizeManager sizeManager = new SizeManager();
 	public static ProductManager productManager = new ProductManager();
+	private static UserManager userManager = new UserManager();
 	
 	public ShoppingCartGraphicUserInterface() {
 	}
 
-	public static void displayShoppingCartGraphicUserInterface(List<Record> shoppingCart, String errorMessage, 
-																boolean filterChange, PrintWriter printWriter) {
+	public static void displayShoppingCartGraphicUserInterface(String display, List<List<String>> shoppingCart, List<Record> addresses, String errorMessage, PrintWriter printWriter) {
 		StringBuilder content = new StringBuilder();
+		List<String> values = userManager.getInformation(display);
 		content.append(
 					"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n");
 		content.append("<html xmlns=\"http://www.w3.org/1999/xhtml\">\n");
@@ -51,6 +53,10 @@ public class ShoppingCartGraphicUserInterface {
 		content.append("					</tr>\n");
 		content.append("				</tbody>\n");
 		content.append("			</table>\n");
+		content.append("			<p style=\"text-align:right\">\n");
+		content.append("				" + Constants.WELCOME_MESSAGE + display + "\n");
+		content.append("				<br/>\n");
+		content.append("			</p>\n");
 		content.append("			<table border=\"0\" cellpadding=\"4\" cellspacing=\"1\" style=\"width: 100%; background-image: url(./images/user_interface/background.jpg); margin: 0px auto;\">\n");
 		content.append("				<tbody>\n");
 		content.append("					<tr>\n");
@@ -73,18 +79,20 @@ public class ShoppingCartGraphicUserInterface {
 			content.append("															<td>\n");
 			content.append("																<table border=\"0\" cellpadding=\"4\" cellspacing=\"1\" style=\"width: 100%; background: #ffffff;\">\n");
 			content.append("																	<tbody>\n");
-			for (Record shoppingCartContent : shoppingCart) {
-				long identifier = Long.parseLong(shoppingCartContent.getAttribute());
-				List<Record> details = productManager.getDetails(identifier); 
+			for (List<String> shoppingCartContent : shoppingCart) {
+				long identifier = Long.parseLong(shoppingCartContent.get(0));
+				List<Record> details = productManager.getDetails(identifier);
 				String name = details.get(1).getValue().toString();
 				double value = Double.parseDouble(details.get(2).getValue().toString());
-				value *= Integer.parseInt(shoppingCartContent.getValue().toString());
+				value *= Integer.parseInt(shoppingCartContent.get(1).toString());
+				String size = shoppingCartContent.get(2);
 				content.append("																	<tr style=\"background: #ebebeb;\">\n");				
 				content.append("																		<td>" + name + " x </td>\n");
-				content.append("																		<td><input type=\"text\" name=\"order_input" + "_" + identifier + "\" id=\"url\" value=\"" + shoppingCartContent.getValue() + "\" onclick=\"this.value = ''\"></td>\n");
+				content.append("																		<td><input type=\"text\" name=\"size" + "_" + identifier + "\" id=\"url\" value=\"" + shoppingCartContent.get(2) + "\" onclick=\"this.value = ''\"></td>\n");
+				content.append("																		<td><input type=\"text\" name=\"order_input" + "_" + identifier + "\" id=\"url\" value=\"" + shoppingCartContent.get(1) + "\" onclick=\"this.value = ''\"></td>\n");
 				content.append("																		<td>" + "= " + new DecimalFormat("#.##").format(value) + "</td>");
-				content.append("																		<td><input type=\"image\" name=\"" + Utilities.removeSpaces(Constants.DELETE_BUTTON_NAME) + "_" + identifier + "\" value=\"" + Constants.DELETE_BUTTON_NAME + "\" src=\"./images/user_interface/remove_from_shopping_cart.png\" /></td>\n");
-				content.append("																		<td><input type=\"image\" name=\"" + Utilities.removeSpaces(Constants.UPDATE_BUTTON_NAME) + "_" + identifier + "\" value=\"" + Constants.UPDATE_BUTTON_NAME + "\" src=\"./images/user_interface/update.png\" /></td>\n");
+				content.append("																		<td><input type=\"image\" name=\"" + Utilities.removeSpaces(Constants.DELETE_BUTTON_NAME) + "_" + Constants.SHOPPING_CART + "_" + identifier + "\" value=\"" + Constants.DELETE_BUTTON_NAME + "\" src=\"./images/user_interface/remove_from_shopping_cart.png\" /></td>\n");
+				content.append("																		<td><input type=\"image\" name=\"" + Utilities.removeSpaces(Constants.UPDATE_BUTTON_NAME) + "_" + Constants.SHOPPING_CART + "_" + identifier + "\" value=\"" + Constants.UPDATE_BUTTON_NAME + "\" src=\"./images/user_interface/update.png\" /></td>\n");
 				content.append("																	</tr>\n");
 				shoppingCartValue += value;
 			}
@@ -96,46 +104,6 @@ public class ShoppingCartGraphicUserInterface {
 			content.append("																</table>\n");
 			content.append("															</td>\n");
 			content.append("														</tr>\n");
-			content.append("														<tr>\n");
-			content.append("															<td style=\"text-align: center\">\n");
-			content.append("																<input type=\"image\" name=\"" + Utilities.removeSpaces(Constants.CANCEL_COMMAND.toLowerCase()) + "\" value=\"" + Constants.CANCEL_COMMAND + "\" src=\"./images/user_interface/remove_from_shopping_cart.png\" />\n");
-			content.append("																&nbsp;&nbsp;\n");
-			content.append("																<input type=\"image\" name=\"" + Utilities.removeSpaces(Constants.COMPLETE_COMMAND.toLowerCase()) + "\" value=\"" + Constants.COMPLETE_COMMAND + "\" src=\"./images/user_interface/shopping_cart_accept.png\" />\n");
-			content.append("															</td>\n");
-			content.append("														</tr>\n");
-			/*List<List<String>> addresses = userManager.getAddresses(display);
-			content.append("														<tr>\n");
-			content.append("															<td colspan=\"3\">\n");
-			content.append("																<table>\n");
-			for (List<String> address : addresses) {
-				content.append("																<tr>\n");
-				content.append("																	<td style=\"background: #ebebeb; text-align: left;\">" + address.get(1) + "</td>\n");
-				content.append("																	<td>\n");
-				content.append("																		<input type=\"image\" name=\"" + Constants.INSERT_BUTTON_NAME.toLowerCase() + "_" + Constants.ADDRESS + "_" + address.get(0) + "\" src=\"./images/user_interface/insert.png\" width=\"16\" height=\"16\" />\n");
-				content.append("																	</td>\n");
-				content.append("																</tr>\n");
-			}
-			content.append("																	<tr>\n");
-			content.append("																		<td>\n");
-			content.append("																			<input type=\"text\" name=\"" + Constants.ADDRESS.toLowerCase() + "\" size=\"5\"/>\n");
-			content.append("																		</td>\n");
-			content.append("																		<td>\n");
-			content.append("																			<input type=\"image\" name=\"" + Constants.INSERT_BUTTON_NAME.toLowerCase() + "_" + Constants.ADDRESS + "\" value=\"" + Constants.INSERT_BUTTON_NAME + "\" src=\"./images/user_interface/insert.png\"/>\n");
-			content.append("																		</td>\n");
-			content.append("																	</tr>\n");
-			content.append("																</table>\n");
-			content.append("															</td>\n");
-			content.append("														</tr>\n");*/
-			if (errorMessage != null && !errorMessage.isEmpty()) {
-				content.append("													<tr>\n");
-				content.append("														<td style=\"color: #ff0000;\">" + errorMessage +  "</td>\n");
-				content.append("													</tr>\n");
-			}
-		} else {
-			content.append("														<tr>\n");
-			content.append("															<td style=\"text-align: center;\">" + Constants.EMPTY_CART + "</td>\n");
-			content.append("														</tr>\n");
-		}
 		content.append("														</tbody>\n");
 		content.append("													</table>\n");
 		content.append("												</td>\n");
@@ -147,6 +115,126 @@ public class ShoppingCartGraphicUserInterface {
 		content.append("							</div>\n");
 		content.append("						</td>\n");
 		content.append("					</tr>\n");
+		content.append("					<tr>\n");
+		content.append("						<td>\n");
+		content.append("							<div id=\"wrapperrelative\">\n");
+		content.append("								<div id=\"wrappertop\"></div>\n");
+		content.append("								<div id=\"wrappermiddle\">\n");
+		content.append("									<table style=\"width: 50%; text-align: center; vertical-align: top;\" border=\"0\" cellpadding=\"4\" cellspacing=\"1\">\n");
+		content.append("										<tbody>\n");
+		content.append("											<tr>\n");
+		content.append("												<td>\n");
+		content.append("													<table>\n");
+		content.append("														<tbody>\n");
+		content.append("															<tr>\n");
+		content.append("																<td>\n");
+		content.append("																	<p>" + Constants.FIRST_NAME + ": </p>\n");
+		content.append("																</td>\n");
+		content.append("																<td>\n");
+		content.append("																	<input type=\"text\" name=\"" + Constants.FIRST_NAME + "\" id=\"url\" value=\"" + values.get(1) + "\" onclick=\"this.value = ''\">\n");
+		content.append("																</td>\n");
+		content.append("															</tr>\n");
+		content.append("															<tr>\n");
+		content.append("																<td>\n");
+		content.append("																	<p>" + Constants.LAST_NAME + ": </p>\n");
+		content.append("																</td>\n");
+		content.append("																<td>\n");
+		content.append("																	<input type=\"text\" name=\"" + Constants.LAST_NAME + "\" id=\"url\" value=\"" + values.get(2) + "\" onclick=\"this.value = ''\">\n");
+		content.append("																</td>\n");
+		content.append("															</tr>\n");
+		content.append("															<tr>\n");
+		content.append("																<td>\n");
+		content.append("																	<p>" + Constants.PHONE_NUMBER + ": </p>\n");
+		content.append("																</td>\n");
+		content.append("																<td>\n");
+		content.append("																	<input type=\"text\" name=\"" + Constants.PHONE_NUMBER + "\" id=\"url\" value=\"" + values.get(3) + "\" onclick=\"this.value = ''\">\n");
+		content.append("																</td>\n");
+		content.append("															</tr>\n");
+		content.append("															<tr>\n");
+		content.append("																<td>\n");
+		content.append("																	<p>" + Constants.EMAIL + ": </p>\n");
+		content.append("																</td>\n");
+		content.append("																<td>\n");
+		content.append("																	<input type=\"text\" name=\"" + Constants.EMAIL + "\" id=\"url\" value=\"" + values.get(4) + "\" readonly>\n");
+		content.append("																</td>\n");
+		content.append("															</tr>\n");
+		content.append("															<tr>\n");
+		content.append("																<td>\n");
+		content.append("																	<p>" + Constants.USERNAME + ": </p>\n");
+		content.append("																</td>\n");
+		content.append("																<td>\n");
+		content.append("																	<input type=\"text\" name=\"" + Constants.USERNAME + "\" id=\"url\" value=\"" + values.get(5) + "\" onclick=\"this.value = ''\">\n");
+		content.append("																</td>\n");
+		content.append("															</tr>\n");
+		content.append("															<tr>\n");
+		content.append("																<td>\n");
+		content.append("																	<p>" + Constants.PASSWORD + ": </p>\n");
+		content.append("																</td>\n");
+		content.append("																<td>\n");
+		content.append("																	<input type=\"password\" name=\"" + Constants.PASSWORD + "\" id=\"url\" value=\"" + values.get(6) + "\" onclick=\"this.value = ''\">\n");
+		content.append("																</td>\n");
+		content.append("															</tr>\n");
+		content.append("														</tbody>\n");
+		content.append("													</table>\n");
+		content.append("												</td>\n");
+		content.append("												<td>\n");
+		content.append("													<table>\n");
+		content.append("														<tbody>\n");
+		content.append("															<tr>\n");
+		content.append("																<td>\n");
+		content.append("																	<p>" + Constants.ADDRESS + ": </p>\n");
+		content.append("																</td>\n");
+     	content.append("                                    							<td>\n");
+     	content.append("                                                    				<input type=\"text\" name=\"" + Constants.ADDRESS + "\" id=\"url\" value=\"address\" onclick=\"this.value = ''\">\n");
+     	content.append("																</td>\n");
+     	content.append("																<td>\n");
+     	content.append("                                            						<input type=\"image\" name=\"" + Constants.INSERT_BUTTON_NAME.toLowerCase() + "_" + Constants.ADDRESS + "\" id=\"insert_address\" value=\"" + Constants.INSERT_BUTTON_NAME + "\" src=\"./images/user_interface/insert.png\"/>\n");
+     	content.append("																</td>\n");
+     	content.append("                                    						</tr>\n");
+     	content.append("                                     						<tr>\n");
+     	content.append("																<td colspan=\"2\">\n");
+     	content.append("                                        							<table>\n");
+     	content.append("                                                						<tbody>\n");
+     	for (Record address : addresses) {
+     	    content.append("																		<tr>\n");
+     	    content.append("                                                							<td style=\"background: #ebebeb; text-align: left;\">" + address.getValue() + "</td>\n");
+     	    content.append("                                                						    <td>\n");
+     	    content.append("																				<input type=\"image\" name=\"" + Constants.SELECT_BUTTON_NAME.toLowerCase() + "_" + Constants.ADDRESS + "_" + address.getAttribute() + "\" src=\"./images/user_interface/delete.png\" width=\"16\" height=\"16\" />\n");
+     	    content.append("                                    						                </td>\n");
+     	    content.append("																		</tr>\n");
+     	}	
+        content.append(" 							                                           	</tbody>\n");
+        content.append("                            					        	  		</table>\n");
+        content.append("																</td>\n");
+        content.append("                            								</tr>\n");
+		content.append("														</tbody>\n");
+		content.append("													</table>\n");
+		content.append("												</td>\n");
+		content.append("											</tr>\n");
+		content.append("										</tbody>\n");
+		content.append("									</table>\n");
+		content.append("								</div>\n");
+		content.append("								<div id=\"wrapperbottom\"></div>\n");
+		content.append("							</div>\n");
+		content.append("						</td>\n");
+		content.append("					</tr>\n");
+		content.append("														<tr>\n");
+		content.append("															<td style=\"text-align: center\">\n");
+		content.append("																<input type=\"image\" name=\"" + Utilities.removeSpaces(Constants.CANCEL_COMMAND.toLowerCase()) + "\" value=\"" + Constants.CANCEL_COMMAND + "\" src=\"./images/user_interface/remove_from_shopping_cart.png\" />\n");
+		content.append("																&nbsp;&nbsp;\n");
+		content.append("																<input type=\"image\" name=\"" + Utilities.removeSpaces(Constants.COMPLETE_COMMAND.toLowerCase()) + "\" value=\"" + Constants.COMPLETE_COMMAND + "\" src=\"./images/user_interface/shopping_cart_accept.png\" />\n");
+		content.append("															</td>\n");
+		content.append("														</tr>\n");
+		if (errorMessage != null && !errorMessage.isEmpty()) {
+			content.append("													<tr>\n");
+			content.append("														<td style=\"color: #ff0000;\">" + errorMessage +  "</td>\n");
+			content.append("													</tr>\n");
+		}
+	} else {
+		content.append("														<tr>\n");
+		content.append("															<td style=\"text-align: center;\">" + Constants.EMPTY_CART + "</td>\n");
+		content.append("														</tr>\n");
+	}
 		content.append("				</tbody>\n");
 		content.append("			</table>\n");
 		content.append("		</form>");

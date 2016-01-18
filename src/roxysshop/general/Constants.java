@@ -89,6 +89,7 @@ public interface Constants {
 	public final static String INSERT_BUTTON_NAME = "Insert";
 	public final static String UPDATE_BUTTON_NAME = "Update";
 	public final static String DELETE_BUTTON_NAME = "Delete";
+	public final static String SELECT_BUTTON_NAME = "Select";
 
 	public final static String OPERATION_TABLE_HEADER = "operation";
 
