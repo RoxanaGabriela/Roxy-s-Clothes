@@ -18,10 +18,8 @@ public class NotLoggedInClientGraphicUserInterface {
 	public NotLoggedInClientGraphicUserInterface() {
 	}
 
-	public static void displayNotLoggedInClientGraphicUserInterface(List<List<Record>> products,
-			List<Record> shoppingCart, int currentRecordsPerPage, int currentPage, String currentSort,
-			String currentCategory, List<String> labelsFilter, String currentSearch, String errorMessage, 
-			boolean filterChange, PrintWriter printWriter) {
+	public static void displayNotLoggedInClientGraphicUserInterface(List<List<Record>> products, int currentRecordsPerPage, int currentPage, String currentSort,
+											String currentCategory, List<String> labelsFilter, String currentSearch, PrintWriter printWriter) {
 		StringBuilder content = new StringBuilder();
 		content.append(
 					"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n");

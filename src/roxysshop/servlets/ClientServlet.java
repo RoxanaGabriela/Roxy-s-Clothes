@@ -171,6 +171,17 @@ public class ClientServlet extends HttpServlet {
 					}
 				}
 				
+				if (parameter.startsWith(Constants.PRODUCT.toLowerCase() + "_") 
+						&&  parameter.endsWith(".x")) {
+					String id = parameter.substring(parameter.lastIndexOf("_") + 1, parameter.indexOf(".x"));
+					session.setAttribute(Constants.PRODUCT, id);
+					RequestDispatcher dispatcher = null;
+					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.PRODUCT_SERVLET_PAGE_CONTEXT);
+					if (dispatcher != null) {
+						dispatcher.forward(request, response);
+					}
+				}
+				
 				if (parameter.equals(Constants.SIGNOUT.toLowerCase() + ".x")) {
 					Enumeration<String> requestParameters = request.getParameterNames();
 					while (requestParameters.hasMoreElements()) {

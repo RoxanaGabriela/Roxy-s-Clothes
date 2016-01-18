@@ -32,6 +32,17 @@
 	
 	<servlet>
 		<description></description>
+		<display-name>ProductServlet</display-name>
+		<servlet-name>ProductServlet</servlet-name>
+		<servlet-class>roxysshop.servlets.ProductServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ProductServlet</servlet-name>
+		<url-pattern>/ProductServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<description></description>
 		<display-name>LoginServlet</display-name>
 		<servlet-name>LoginServlet</servlet-name>
 		<servlet-class>roxysshop.servlets.LoginServlet</servlet-class>

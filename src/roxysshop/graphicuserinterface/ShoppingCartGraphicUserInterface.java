@@ -85,7 +85,6 @@ public class ShoppingCartGraphicUserInterface {
 				String name = details.get(1).getValue().toString();
 				double value = Double.parseDouble(details.get(2).getValue().toString());
 				value *= Integer.parseInt(shoppingCartContent.get(1).toString());
-				String size = shoppingCartContent.get(2);
 				content.append("																	<tr style=\"background: #ebebeb;\">\n");				
 				content.append("																		<td>" + name + " x </td>\n");
 				content.append("																		<td><input type=\"text\" name=\"size" + "_" + identifier + "\" id=\"url\" value=\"" + shoppingCartContent.get(2) + "\" onclick=\"this.value = ''\"></td>\n");

@@ -139,7 +139,6 @@ public class NotLoggedInClientServlet extends HttpServlet {
 			}
 			
 			NotLoggedInClientGraphicUserInterface.displayNotLoggedInClientGraphicUserInterface(products,
-					new ArrayList(),
 					(currentRecordsPerPage != null && filterChange) ? Integer.parseInt(currentRecordsPerPage)
 							: Constants.RECORDS_PER_PAGE_VALUES[0],
 					(currentPage != null && filterChange && currentRecordsPerPage != null
@@ -149,8 +148,6 @@ public class NotLoggedInClientServlet extends HttpServlet {
 									currentCategory,
 									labelsFilter,
 									currentSearch,
-									null,
-									filterChange,
 									printWriter);
 		}
 	}
