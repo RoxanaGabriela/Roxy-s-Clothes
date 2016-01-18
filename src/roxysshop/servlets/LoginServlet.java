@@ -43,6 +43,7 @@ public class LoginServlet extends HttpServlet {
 
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(true);
 		Enumeration<String> parameters = request.getParameterNames();
 		boolean found = false;
 		while (parameters.hasMoreElements()) {
@@ -64,7 +65,6 @@ public class LoginServlet extends HttpServlet {
 		try (PrintWriter printWriter = new PrintWriter(response.getWriter())) {
 			int type = userManager.verifyUser(username, password);
 			if (type != Constants.USER_NONE) {
-				HttpSession session = request.getSession(true);
 				session.setAttribute(Constants.DISPLAY, userManager.getDisplay(username, password));
 				RequestDispatcher dispatcher = null;
 				dispatcher = getServletContext().getRequestDispatcher("/" + Constants.CLIENT_SERVLET_PAGE_CONTEXT);

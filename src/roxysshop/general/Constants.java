@@ -21,8 +21,10 @@ public interface Constants {
 	public final static String UPDATE_SERVLET_PAGE_CONTEXT = "UpdateServlet";
 	public final static String HISTORY_SERVLET_PAGE_CONTEXT = "HistoryServlet";
 	public final static String NOT_LOGGED_IN_CLIENT_SERVLET_PAGE_CONTEXT = "NotLoggedInClientServlet";
+	public final static String NOT_LOGGED_IN_PRODUCT_SERVLET_PAGE_CONTEXT = "NotLoggedInProductServlet";
 	public final static String LOGGED_IN_CLIENT_SERVLET_PAGE_CONTEXT = "LoggedInClientServlet";
 	public final static String SHOPPING_CART_SERVLET_PAGE_CONTEXT = "ShoppingCartServlet";
+	public final static String NOT_LOGGED_IN_SHOPPING_CART_SERVLET_PAGE_CONTEXT = "NotLoggedInShoppingCartServlet";
 	public final static String PRODUCT_SERVLET_PAGE_CONTEXT = "ProductServlet";
 
 	public final static String LOGIN_SERVLET_PAGE_NAME = "Authentication";
@@ -37,8 +39,10 @@ public interface Constants {
 	public final static String UPDATE_FORM = "update_form";
 	public final static String HISTORY_FORM = "history_form";
 	public final static String NOT_LOGGED_IN_CLIENT_FORM = "not_logged_in_client_form";
+	public final static String NOT_LOGGED_IN_PRODUCT_FORM = "not_logged_in_product_form";
 	public final static String LOGGED_IN_CLIENT_FORM = "logged_in_client_form";
 	public final static String SHOPPING_CART_FORM = "shopping_cart_form";
+	public final static String NOT_LOGGED_IN_SHOPPING_CART_FORM = "not_logged_in_shopping_cart_form";
 	public final static String PRODUCT_FORM = "product_form";
 	
 	public final static String SIGNUP = "Sign up";

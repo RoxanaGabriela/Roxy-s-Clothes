@@ -18,7 +18,7 @@ public class NotLoggedInClientGraphicUserInterface {
 	public NotLoggedInClientGraphicUserInterface() {
 	}
 
-	public static void displayNotLoggedInClientGraphicUserInterface(List<List<Record>> products, int currentRecordsPerPage, int currentPage, String currentSort,
+	public static void displayNotLoggedInClientGraphicUserInterface(List<List<Record>> products, List<List<String>> shoppingCart, int currentRecordsPerPage, int currentPage, String currentSort,
 											String currentCategory, List<String> labelsFilter, String currentSearch, PrintWriter printWriter) {
 		StringBuilder content = new StringBuilder();
 		content.append(
@@ -46,10 +46,15 @@ public class NotLoggedInClientGraphicUserInterface {
 		content.append("						<td>\n");
 		content.append("							<input type=\"image\" name=\"" + Constants.SIGNUP.toLowerCase() + "\" value=\"" + Constants.SIGNUP + "\" src=\"./images/user_interface/signup.png\" />\n");
 		content.append("						</td>\n");
+		content.append("						<td>\n");
+		content.append("							<input type=\"image\" name=\"" + Constants.SHOPPING_CART.toLowerCase() + "\" value=\"" + Constants.SHOPPING_CART + "\" src=\"./images/user_interface/signup.png\" />\n");
+		content.append("						</td>\n");
 		content.append("					</tr>\n");
 		content.append("				</tbody>\n");
 		content.append("			</table>\n");
 		content.append("			<p style=\"text-align:right\">\n");
+		content.append("				" + Constants.SHOPPING_CART + " (" + shoppingCart.size() + ")\n");
+		content.append("				<br/>");
 		content.append("				" + Constants.RECORDS_PER_PAGE + "<select name=\"" + Utilities.removeSpaces(Constants.RECORDS_PER_PAGE.toLowerCase().trim()) + "\" onchange=\"document." + Constants.NOT_LOGGED_IN_CLIENT_FORM + ".submit()\">\n");
 		for (int recordsPerPageValue : Constants.RECORDS_PER_PAGE_VALUES) {
 			content.append("				<option value=\"" + recordsPerPageValue + "\"" + ((recordsPerPageValue == currentRecordsPerPage) ? " SELECTED" : "") + ">" + recordsPerPageValue + "</option>\n");
@@ -116,10 +121,10 @@ public class NotLoggedInClientGraphicUserInterface {
 		content.append("											<tr>\n");
 		content.append("												<td>" + Constants.LABEL + "</td>\n");
 		content.append("												<td>\n");
-		content.append("													<input type=\"text\" name=\"" + Constants.LABEL.toLowerCase() + "/>\n");
+		content.append("													<input type=\"text\" name=\"" + Constants.LABEL.toLowerCase() + "\" size=\"5\"/>\n");
 		content.append("												</td>\n");
 		content.append("												<td>\n");
-		content.append("													<input type=\"image\" name=\"" + Constants.INSERT_BUTTON_NAME.toLowerCase() + "_" + Constants.LABEL + "\" value=\"\" src=\"./images/user_interface/insert.png\"/>\n");
+		content.append("												<input type=\"image\" name=\"" + Constants.INSERT_BUTTON_NAME.toLowerCase() + "_" + Constants.LABEL + "\" value=\"" + Constants.INSERT_BUTTON_NAME + "\" src=\"./images/user_interface/insert.png\"/>\n");
 		content.append("												</td>\n");
 		content.append("											</tr>\n");
 		content.append("											<tr>\n");
@@ -144,53 +149,45 @@ public class NotLoggedInClientGraphicUserInterface {
 		content.append("						</td>\n");
 
 		content.append("						<td>\n");
-		int index = 0;
-		for (List<Record> product : products) {
-			index++;
+		for (int index = 0; index < products.size(); index += 3) {
 			if (index + 1 < ((currentPage - 1) * currentRecordsPerPage + 1)
 					|| index + 1 > (currentPage * currentRecordsPerPage)) {
 				continue;
 			}
-			String currentIdentifier = product.get(0).getValue().toString();
-			content.append("						<div id=\"wrapperrelative\">\n");
-			content.append("							<div id=\"wrappertop\"></div>\n");
-			content.append("							<div id=\"wrappermiddle\">\n");
-			content.append("								<table style=\"width: 100%;\" border=\"0\" cellpadding=\"4\" cellspacing=\"4\">\n");
-			content.append("									<tbody>\n");
-			content.append("										<tr>\n");
-			content.append("											<td>\n");
-			content.append("												<input type=\"image\" name=\"" + Constants.PRODUCT + "_" + currentIdentifier + "\" value=\"" + Constants.PRODUCT + "\" src=\"" + product.get(7).getValue() + "\" height=\"314\" width=\"208\"/>\n");
-			content.append("											</td>\n");
-			content.append("											<td>\n");
-			content.append("												<table style=\"width: 100%;\" border=\"0\" cellpadding=\"4\" cellspacing=\"4\">\n");
-			content.append("													<tbody>\n");
-			for (Record field : product) {
-				if (field.getAttribute().equals("Picture")) continue;
-				content.append("													<tr>\n");
-				content.append("														<td>&nbsp;</td>\n");
-				content.append("														<td style=\"text-align: left;\">" + field.getAttribute() + ": " + field.getValue() + "</td>\n");
-				content.append("													</tr>\n");
-			}
-			content.append("														<tr>\n");
-			content.append("															<td>" + Constants.SIZE + "</td>\n");
-			content.append("															<td>\n");		
-			content.append("																<select name=\"" + Constants.CURRENT_SIZE+ "\" onchange=\"document." + Constants.NOT_LOGGED_IN_CLIENT_FORM + ".submit()\"" + "\" style=\"width: 100%\">\n");
-			List<String> sizeList = sizeManager.getSizes(Long.parseLong(currentIdentifier));
-			for (String sizeAttribute : sizeList) {
-				content.append("																<option value=\"" + sizeAttribute + "\"" + ((sizeAttribute.equals(currentCategory)) ? " SELECTED" : "") + ">" + sizeAttribute + "</option>\n");
-			}
-			content.append("																</select>\n");		
-			content.append("															</td>\n");
-			content.append("														</tr>\n");
-			content.append("													</tbody>\n");
-			content.append("												</table>\n");
-			content.append("											</td>\n");
-			content.append("										</tr>\n");
-			content.append("									</tbody>\n");
-			content.append("								</table>\n");
-			content.append("							</div>\n");
-			content.append("							<div id=\"wrapperbottom\"></div>\n");
-			content.append("						</div>\n");
+				content.append("					<div id=\"wrapperrelative\">\n");
+				content.append("						<div id=\"wrappertop\"></div>\n");
+				content.append("						<div id=\"wrappermiddle\">\n");
+				content.append("							<table style=\"width: 100%;\" border=\"0\" cellpadding=\"4\" cellspacing=\"4\">\n");
+				content.append("								<tbody>\n");
+				content.append("									<tr>\n");
+				for (int i = 0; i < 3; i++) {
+					if (index + i >= products.size()) break;
+					String currentIdentifier = products.get(index + i).get(0).getValue().toString();
+					System.out.println(currentIdentifier);
+					content.append("									<td>\n");
+					content.append("										<table>\n");
+					content.append("											<tbody>\n");
+					content.append("												<tr>\n");
+					content.append("													<td style=\"text-align: center;\">\n");
+					content.append("														<input type=\"image\" name=\"" + Constants.PRODUCT + "_" + currentIdentifier + "\" value=\"" + Constants.PRODUCT + "\" src=\"" + products.get(index + i).get(7).getValue() + "\" height=\"314\" width=\"208\"/>\n");
+					content.append("													</td>\n");
+					content.append("												</tr>\n");
+					content.append("												<tr>\n");
+					content.append("													<td style=\"text-align: center;\">" + products.get(index + i).get(1).getAttribute() + ": " + products.get(index + i).get(1).getValue() + "</td>\n");
+					content.append("												</tr>\n");
+					content.append("												<tr>\n");
+					content.append("													<td style=\"text-align: center;\">" + products.get(index + i).get(2).getAttribute() + ": " + products.get(index + i).get(2).getValue() + "</td>\n");
+					content.append("												</tr>\n");
+					content.append("											</tbody>\n");
+					content.append("										</table>\n");
+					content.append("									</td>\n");
+				}
+				content.append("									</tr>\n");
+				content.append("								</tbody>\n");
+				content.append("							</table>\n");
+				content.append("						</div>\n");
+				content.append("						<div id=\"wrapperbottom\"></div>\n");
+				content.append("					</div>\n");
 		}
 		content.append("						</td>\n");
 		content.append("					</tr>\n");

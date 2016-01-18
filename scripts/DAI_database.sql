@@ -66,9 +66,10 @@ ALTER TABLE fabric ADD CONSTRAINT fabric_ck_percent_should_be_positive CHECK (pe
 CREATE TABLE IF NOT EXISTS invoice (
     id                  INT(10)         UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
     user_id             INT(10)         UNSIGNED NOT NULL,
-    address_id              INT(10)         UNSIGNED NOT NULL,
+    address_id          INT(10)         UNSIGNED NOT NULL,
     total_price         INT(4)          NOT NULL DEFAULT '0',
     date                DATE            NOT NULL,
+    issued				BOOLEAN			NOT NULL DEFAULT '0',
     
     FOREIGN KEY (user_id) REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (address_id) REFERENCES address(id) ON UPDATE CASCADE ON DELETE CASCADE

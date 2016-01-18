@@ -2,6 +2,7 @@ package roxysshop.graphicuserinterface;
 
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import roxysshop.businesslogic.ProductManager;
@@ -22,6 +23,12 @@ public class ShoppingCartGraphicUserInterface {
 	public static void displayShoppingCartGraphicUserInterface(String display, List<List<String>> shoppingCart, List<Record> addresses, String errorMessage, PrintWriter printWriter) {
 		StringBuilder content = new StringBuilder();
 		List<String> values = userManager.getInformation(display);
+		if (values == null || values.isEmpty()) {
+			values = new ArrayList<>();
+			for (int i = 0; i < 7; i++) {
+				values.add("");
+			}
+		}
 		content.append(
 					"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n");
 		content.append("<html xmlns=\"http://www.w3.org/1999/xhtml\">\n");
@@ -154,7 +161,7 @@ public class ShoppingCartGraphicUserInterface {
 		content.append("																	<p>" + Constants.EMAIL + ": </p>\n");
 		content.append("																</td>\n");
 		content.append("																<td>\n");
-		content.append("																	<input type=\"text\" name=\"" + Constants.EMAIL + "\" id=\"url\" value=\"" + values.get(4) + "\" readonly>\n");
+		content.append("																	<input type=\"text\" name=\"" + Constants.EMAIL + "\" id=\"url\" value=\"" + values.get(4) + "\" onclick=\"this.value = ''\">\n");
 		content.append("																</td>\n");
 		content.append("															</tr>\n");
 		content.append("															<tr>\n");
@@ -162,7 +169,7 @@ public class ShoppingCartGraphicUserInterface {
 		content.append("																	<p>" + Constants.USERNAME + ": </p>\n");
 		content.append("																</td>\n");
 		content.append("																<td>\n");
-		content.append("																	<input type=\"text\" name=\"" + Constants.USERNAME + "\" id=\"url\" value=\"" + values.get(5) + "\" onclick=\"this.value = ''\">\n");
+		content.append("																	<input type=\"text\" name=\"" + Constants.USERNAME + "\" id=\"url\" value=\"" + values.get(5) + "\" readonly>\n");
 		content.append("																</td>\n");
 		content.append("															</tr>\n");
 		content.append("															<tr>\n");

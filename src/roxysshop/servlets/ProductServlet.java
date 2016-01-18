@@ -78,10 +78,9 @@ public class ProductServlet extends HttpServlet {
 							parameter.indexOf(".x"));
 					String quantity = request.getParameter(Constants.COPIES.toLowerCase() + "_"
 							+ Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()) + "_" + id);
-					String size = request.getParameter(Constants.CURRENT_SIZE + "_" + id);
 					boolean found = false;
 					for (List<String> shoppingCartRecord : shoppingCart) {
-						if (shoppingCartRecord.get(0).equals(id) && shoppingCartRecord.get(2).equals(size)) {
+						if (shoppingCartRecord.get(0).equals(id) && shoppingCartRecord.get(2).equals(currentSize)) {
 							found = true;
 							if (Integer.parseInt(quantity) == 0) {
 								shoppingCart.remove(shoppingCartRecord);
@@ -95,7 +94,7 @@ public class ProductServlet extends HttpServlet {
 						List<String> record = new ArrayList<>();
 						record.add(id);
 						record.add(quantity);
-						record.add(size);
+						record.add(currentSize);
 						shoppingCart.add(record);
 					}
 				}

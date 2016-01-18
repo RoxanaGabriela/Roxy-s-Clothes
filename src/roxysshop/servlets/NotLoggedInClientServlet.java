@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import roxysshop.businesslogic.ProductManager;
 import roxysshop.general.Constants;
@@ -32,6 +33,7 @@ public class NotLoggedInClientServlet extends HttpServlet {
 	private String currentCategory;
 	private String currentSearch;
 	private List<String> labelsFilter;
+	private List<List<String>> shoppingCart;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -50,13 +52,20 @@ public class NotLoggedInClientServlet extends HttpServlet {
 	public void destroy() {
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(true);
 		response.setContentType("text/html");
 		try (PrintWriter printWriter = new PrintWriter(response.getWriter())) {
 			boolean filterChange = false;
 			String sortBy = new String("name ASC");
 
+			shoppingCart = (List<List<String>>) session.getAttribute(Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()));
+			if (shoppingCart == null) {
+				shoppingCart = new ArrayList<>();
+			}
+			labelsFilter = (List<String>) session.getAttribute(Constants.LABELS_FILTER);
 			if (labelsFilter == null) {
 				labelsFilter = new ArrayList<>();
 			}
@@ -105,7 +114,22 @@ public class NotLoggedInClientServlet extends HttpServlet {
 						filterChange = true;
 					}
 				}
+				
+				session.setAttribute(Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()), shoppingCart);
+				session.setAttribute(Constants.DISPLAY, "");
+				session.setAttribute(Constants.LABELS_FILTER, labelsFilter);
 
+				if (parameter.startsWith(Constants.PRODUCT.toLowerCase() + "_") 
+						&&  parameter.endsWith(".x")) {
+					String id = parameter.substring(parameter.lastIndexOf("_") + 1, parameter.indexOf(".x"));
+					session.setAttribute(Constants.PRODUCT, id);
+					RequestDispatcher dispatcher = null;
+					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.NOT_LOGGED_IN_PRODUCT_SERVLET_PAGE_CONTEXT);
+					if (dispatcher != null) {
+						dispatcher.forward(request, response);
+					}
+				}
+				
 				if (parameter.equals(Constants.SIGNIN.toLowerCase() + ".x")) {
 					Enumeration<String> requestParameters = request.getParameterNames();
 					while (requestParameters.hasMoreElements()) {
@@ -132,6 +156,14 @@ public class NotLoggedInClientServlet extends HttpServlet {
 					}
 					break;
 				}
+				
+				if (parameter.equals(Constants.SHOPPING_CART.toLowerCase() + ".x")) {
+					RequestDispatcher dispatcher = null;
+					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.NOT_LOGGED_IN_SHOPPING_CART_SERVLET_PAGE_CONTEXT);
+					if (dispatcher != null) {
+						dispatcher.forward(request, response);
+					}
+				}
 			}
 			
 			if (products == null || filterChange) {
@@ -139,6 +171,7 @@ public class NotLoggedInClientServlet extends HttpServlet {
 			}
 			
 			NotLoggedInClientGraphicUserInterface.displayNotLoggedInClientGraphicUserInterface(products,
+					shoppingCart,
 					(currentRecordsPerPage != null && filterChange) ? Integer.parseInt(currentRecordsPerPage)
 							: Constants.RECORDS_PER_PAGE_VALUES[0],
 					(currentPage != null && filterChange && currentRecordsPerPage != null

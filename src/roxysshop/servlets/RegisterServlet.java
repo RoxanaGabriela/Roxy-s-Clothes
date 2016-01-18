@@ -47,6 +47,8 @@ public class RegisterServlet extends HttpServlet {
 
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(true);
+		
 		response.setContentType("text/html");
 		try (PrintWriter printWriter = new PrintWriter(response.getWriter())) {
 			values = new ArrayList<>();
@@ -133,7 +135,6 @@ public class RegisterServlet extends HttpServlet {
 									addressManager.create(val);
 								}
 								
-								HttpSession session = request.getSession(true);
 								session.setAttribute(Constants.DISPLAY, userManager.getDisplay(values.get(4), values.get(5)));
 								RequestDispatcher dispatcher = null;
 								dispatcher = getServletContext().getRequestDispatcher("/" + Constants.CLIENT_SERVLET_PAGE_CONTEXT);

@@ -119,36 +119,6 @@ public class ClientServlet extends HttpServlet {
 					}
 				}
 				
-				if (parameter
-						.startsWith(Constants.INSERT_BUTTON_NAME.toLowerCase() + "_"
-								+ Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()) + "_")
-						&& parameter.endsWith(".x")) {
-					String id = parameter.substring(parameter.lastIndexOf("_") + 1,
-							parameter.indexOf(".x"));
-					String quantity = request.getParameter(Constants.COPIES.toLowerCase() + "_"
-							+ Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()) + "_" + id);
-					String size = request.getParameter(Constants.CURRENT_SIZE + "_" + id);
-					boolean found = false;
-					for (List<String> shoppingCartRecord : shoppingCart) {
-						if (shoppingCartRecord.get(0).equals(id) && shoppingCartRecord.get(2).equals(size)) {
-							found = true;
-							if (Integer.parseInt(quantity) == 0) {
-								shoppingCart.remove(shoppingCartRecord);
-							} else {
-								shoppingCartRecord.set(1, quantity);
-							}
-							break;
-						}
-					}
-					if (!found && Integer.parseInt(quantity) != 0) {
-						List<String> record = new ArrayList<>();
-						record.add(id);
-						record.add(quantity);
-						record.add(size);
-						shoppingCart.add(record);
-					}
-				}
-				
 				session.setAttribute(Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()), shoppingCart);
 				session.setAttribute(Constants.LABELS_FILTER, labelsFilter);
 				

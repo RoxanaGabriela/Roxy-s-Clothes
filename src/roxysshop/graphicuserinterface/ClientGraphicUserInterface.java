@@ -125,10 +125,10 @@ public class ClientGraphicUserInterface {
 		content.append("											<tr>\n");
 		content.append("												<td>" + Constants.LABEL + "</td>\n");
 		content.append("												<td>\n");
-		content.append("													<input type=\"text\" name=\"" + Constants.LABEL.toLowerCase() + "/>\n");
+		content.append("													<input type=\"text\" name=\"" + Constants.LABEL.toLowerCase() + "\" size=\"5\"/>\n");
 		content.append("												</td>\n");
 		content.append("												<td>\n");
-		content.append("													<input type=\"image\" name=\"" + Constants.INSERT_BUTTON_NAME.toLowerCase() + "_" + Constants.LABEL + "\" value=\"\" src=\"./images/user_interface/insert.png\"/>\n");
+		content.append("												<input type=\"image\" name=\"" + Constants.INSERT_BUTTON_NAME.toLowerCase() + "_" + Constants.LABEL + "\" value=\"" + Constants.INSERT_BUTTON_NAME + "\" src=\"./images/user_interface/insert.png\"/>\n");
 		content.append("												</td>\n");
 		content.append("											</tr>\n");
 		content.append("											<tr>\n");

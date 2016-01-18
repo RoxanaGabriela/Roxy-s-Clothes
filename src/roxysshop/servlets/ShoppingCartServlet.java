@@ -15,12 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.sun.org.apache.bcel.internal.generic.INVOKEVIRTUAL;
-
 import roxysshop.businesslogic.AddressManager;
 import roxysshop.businesslogic.InvoiceDetailsManager;
 import roxysshop.businesslogic.InvoiceManager;
-import roxysshop.businesslogic.ProductManager;
 import roxysshop.businesslogic.SizeManager;
 import roxysshop.businesslogic.UserManager;
 import roxysshop.general.Constants;
@@ -34,7 +31,6 @@ public class ShoppingCartServlet  extends HttpServlet {
 	private UserManager userManager;
 	private AddressManager addressManager;
 	private InvoiceManager invoiceManager;
-	private ProductManager productManager;
 	private InvoiceDetailsManager invoiceDetailsManager;
 	private SizeManager sizeManager;
 	
@@ -56,7 +52,6 @@ public class ShoppingCartServlet  extends HttpServlet {
 		userManager = new UserManager();
 		addressManager = new AddressManager();
 		invoiceManager = new InvoiceManager();
-		productManager = new ProductManager();
 		invoiceDetailsManager = new InvoiceDetailsManager();
 		sizeManager = new SizeManager();
 		
@@ -199,42 +194,45 @@ public class ShoppingCartServlet  extends HttpServlet {
 							val.add(userManager.getIdentifier(display) + "");
 							addressManager.create(val);
 						}
-					}
-					
-					List<String> invoice = new ArrayList<>();
-					invoice.add(String.valueOf(userManager.getIdentifier(display)));
-					invoice.add(selected_address_id);
-					invoice.add("0");
-					invoice.add(LocalDate.now().toString());
-					long invoiceId = invoiceManager.create(invoice);
-					
-					for (List<String> shoppingCartRecord : shoppingCart) {
-						long productId = Long.parseLong(shoppingCartRecord.get(0));
-						int quantity = Integer.parseInt(shoppingCartRecord.get(1).toString());
-						String size = shoppingCartRecord.get(2);
-						int stockpile = sizeManager.getStockpile(productId, size);
-						if (quantity <= stockpile) {
-							List<String> productAttributes = new ArrayList<>();
-							productAttributes.add("stockpile");
-							List<String> productValues = new ArrayList<>();
-							productValues.add(String.valueOf(stockpile - quantity));
-							sizeManager.update(productAttributes, productValues,
-									productId, size);
-							List<String> invoiceDetails = new ArrayList<>();
-							invoiceDetails.add(String.valueOf(invoiceId));
-							invoiceDetails.add(String.valueOf(productId));
-							invoiceDetails.add(String.valueOf(quantity));
-							invoiceDetails.add(size);
-							invoiceDetailsManager.create(invoiceDetails);
-							shoppingCart = new ArrayList<>();
-						} else {
-							errorMessage = Constants.INVALID_COMMAND_ERROR1 + productId + Constants.INVALID_COMMAND_ERROR2;
+						
+						List<String> invoice = new ArrayList<>();
+						invoice.add(String.valueOf(userManager.getIdentifier(display)));
+						invoice.add(selected_address_id);
+						invoice.add("0");
+						invoice.add(LocalDate.now().toString());
+						invoice.add("0");
+						long invoiceId = invoiceManager.create(invoice);
+						
+						for (List<String> shoppingCartRecord : shoppingCart) {
+							long productId = Long.parseLong(shoppingCartRecord.get(0));
+							int quantity = Integer.parseInt(shoppingCartRecord.get(1).toString());
+							String size = shoppingCartRecord.get(2);
+							int stockpile = sizeManager.getStockpile(productId, size);
+							if (quantity <= stockpile) {
+								List<String> productAttributes = new ArrayList<>();
+								productAttributes.add("stockpile");
+								List<String> productValues = new ArrayList<>();
+								productValues.add(String.valueOf(stockpile - quantity));
+								sizeManager.update(productAttributes, productValues,
+										productId, size);
+								List<String> invoiceDetails = new ArrayList<>();
+								invoiceDetails.add(String.valueOf(invoiceId));
+								invoiceDetails.add(String.valueOf(productId));
+								invoiceDetails.add(String.valueOf(quantity));
+								invoiceDetails.add(size);
+								invoiceDetailsManager.create(invoiceDetails);
+								shoppingCart = new ArrayList<>();
+								session.setAttribute(Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()), shoppingCart);
+							} else {
+								errorMessage = Constants.INVALID_COMMAND_ERROR1 + productId + Constants.INVALID_COMMAND_ERROR2;
+							}
 						}
 					}
 				}
 
 				if (parameter.equals(Utilities.removeSpaces(Constants.CANCEL_COMMAND.toLowerCase()) + ".x")) {
 					shoppingCart = new ArrayList<>();
+					session.setAttribute(Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()), shoppingCart);
 				}
 				
 				if (parameter.equals(Constants.HOME.toLowerCase() + ".x")) {
