@@ -109,3 +109,4 @@ INSERT INTO fabric (name, percent, product_id) VALUES ('Viscosa', '45', '2');
 INSERT INTO fabric (name, percent, product_id) VALUES ('Poliester', '30', '2');
 
 INSERT INTO user (first_name, last_name, phone_number, email, username, password, type) VALUES ('Andreea', 'Dragomir', '0724321412', 'andreea.dragomir@gmail.com', 'andreead', '-', 'client');
+INSERT INTO user (first_name, last_name, phone_number, email, username, password, type) VALUES ('Roxana', 'Blaj', '0725421060', 'roxana.gabriela@gmail.com', 'rblaj', '-', 'administrator');

@@ -66,10 +66,18 @@ public class LoginServlet extends HttpServlet {
 			int type = userManager.verifyUser(username, password);
 			if (type != Constants.USER_NONE) {
 				session.setAttribute(Constants.DISPLAY, userManager.getDisplay(username, password));
-				RequestDispatcher dispatcher = null;
-				dispatcher = getServletContext().getRequestDispatcher("/" + Constants.CLIENT_SERVLET_PAGE_CONTEXT);
-				if (dispatcher != null) {
-					dispatcher.forward(request, response);
+				if (type == Constants.USER_CLIENT) {
+					RequestDispatcher dispatcher = null;
+					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.CLIENT_SERVLET_PAGE_CONTEXT);
+					if (dispatcher != null) {
+						dispatcher.forward(request, response);
+					}
+				} else if (type == Constants.USER_ADMINISTRATOR) {
+					RequestDispatcher dispatcher = null;
+					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.ADMINISTRATOR_SERVLET_PAGE_CONTEXT);
+					if (dispatcher != null) {
+						dispatcher.forward(request, response);
+					}
 				}
 			}
 

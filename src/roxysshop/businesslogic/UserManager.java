@@ -70,10 +70,10 @@ public class UserManager extends EntityManager {
 					null, null, null);
 			
 			if (type != null && !type.isEmpty() && type.get(0) != null && type.get(0).get(0) != null) {
-				//if (type.equals(Constants.CLIENT_TYPE))
+				if (type.get(0).get(0).equals("client"))
 					result = Constants.USER_CLIENT;
-				//else
-				//	result = Constants.USER_ADMINISTRATOR;
+				else
+					result = Constants.USER_ADMINISTRATOR;
 			}
 		} catch (SQLException sqlException) {
 			System.out.println("An exception has occurred: " + sqlException.getMessage());

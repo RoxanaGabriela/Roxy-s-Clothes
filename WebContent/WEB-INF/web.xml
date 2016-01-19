@@ -43,6 +43,17 @@
 	
 	<servlet>
 		<description></description>
+		<display-name>NotLoggedInProductServlet</display-name>
+		<servlet-name>NotLoggedInProductServlet</servlet-name>
+		<servlet-class>roxysshop.servlets.NotLoggedInProductServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>NotLoggedInProductServlet</servlet-name>
+		<url-pattern>/NotLoggedInProductServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<description></description>
 		<display-name>LoginServlet</display-name>
 		<servlet-name>LoginServlet</servlet-name>
 		<servlet-class>roxysshop.servlets.LoginServlet</servlet-class>
@@ -76,6 +87,17 @@
 	
 	<servlet>
 		<description></description>
+		<display-name>NotLoggedInShoppingCartServlet</display-name>
+		<servlet-name>NotLoggedInShoppingCartServlet</servlet-name>
+		<servlet-class>roxysshop.servlets.NotLoggedInShoppingCartServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>NotLoggedInShoppingCartServlet</servlet-name>
+		<url-pattern>/NotLoggedInShoppingCartServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<description></description>
 		<display-name>HistoryServlet</display-name>
 		<servlet-name>HistoryServlet</servlet-name>
 		<servlet-class>roxysshop.servlets.HistoryServlet</servlet-class>
@@ -94,6 +116,17 @@
 	<servlet-mapping>
 		<servlet-name>UpdateServlet</servlet-name>
 		<url-pattern>/UpdateServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<description></description>
+		<display-name>AdministratorServlet</display-name>
+		<servlet-name>AdministratorServlet</servlet-name>
+		<servlet-class>roxysshop.servlets.AdministratorServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AdministratorServlet</servlet-name>
+		<url-pattern>/AdministratorServlet</url-pattern>
 	</servlet-mapping>
 	
 	<servlet>
