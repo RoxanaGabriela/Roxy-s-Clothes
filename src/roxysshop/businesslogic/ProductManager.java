@@ -34,7 +34,7 @@ public class ProductManager extends EntityManager {
 			attributes.add("GROUP_CONCAT(CONCAT(f.percent, '% ', f.name)) AS fabrics");
 			attributes.add("p.picture AS picture");
 			
-			String whereClause = new String("f.product_id=p.id");
+			String whereClause = new String("f.product_id=p.id AND p.valid='0'");
 				
 			String orderByClause = new String();
 			if (currentSort != null && !currentSort.isEmpty()) {

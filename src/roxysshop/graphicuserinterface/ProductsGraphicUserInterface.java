@@ -3,21 +3,21 @@ package roxysshop.graphicuserinterface;
 import java.io.PrintWriter;
 import java.util.List;
 
-import roxysshop.businesslogic.InvoiceManager;
+import roxysshop.businesslogic.ProductManager;
 import roxysshop.general.Constants;
 import roxysshop.general.Utilities;
 import roxysshop.helper.Record;
 
-public class InvoicesHistoryGraphicUserInterface {
-	public static InvoiceManager invoiceManager = new InvoiceManager();
+public class ProductsGraphicUserInterface {
+	public static ProductManager productManager = new ProductManager();
 	
-	public InvoicesHistoryGraphicUserInterface() {
+	public ProductsGraphicUserInterface() {
 	}
 
-	public static void displayInvoicesHistoryGraphicUserInterface(String display, int currentRecordsPerPage, 
+	public static void displayProductsGraphicUserInterface(String display, int currentRecordsPerPage, 
 			int currentPage, PrintWriter printWriter) {
 		StringBuilder content = new StringBuilder();
-		List<List<Record>> invoices = invoiceManager.getAllInvoices();
+		List<List<Record>> products = productManager.getCollection("p.id ASC", null, null, null);
 		content.append(
 					"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n");
 		content.append("<html xmlns=\"http://www.w3.org/1999/xhtml\">\n");
@@ -30,7 +30,7 @@ public class InvoicesHistoryGraphicUserInterface {
 
 		content.append("	<body>\n");
 		content.append("		<h2 style=\"text-align: center\">" + Constants.APPLICATION_NAME.toUpperCase() + "</h2>\n");
-		content.append("		<form action=\"" + Constants.INVOICES_HISTORY_SERVLET_PAGE_CONTEXT + "\" method=\"post\" name=\"" + Constants.INVOICES_HISTORY_FORM + "\">\n");
+		content.append("		<form action=\"" + Constants.PRODUCTS_SERVLET_PAGE_CONTEXT + "\" method=\"post\" name=\"" + Constants.PRODUCTS_FORM + "\">\n");
 		content.append("			<table>\n");
 		content.append("				<tbody>\n");
 		content.append("					<tr>\n");
@@ -49,14 +49,14 @@ public class InvoicesHistoryGraphicUserInterface {
 		content.append("			<p style=\"text-align:right\">\n");
 		content.append("				" + Constants.WELCOME_MESSAGE + display + "\n");
 		content.append("				<br/>\n");
-		content.append("				" + Constants.RECORDS_PER_PAGE + "<select name=\"" + Utilities.removeSpaces(Constants.RECORDS_PER_PAGE.toLowerCase().trim()) + "\" onchange=\"document." + Constants.INVOICES_HISTORY_FORM + ".submit()\">\n");
+		content.append("				" + Constants.RECORDS_PER_PAGE + "<select name=\"" + Utilities.removeSpaces(Constants.RECORDS_PER_PAGE.toLowerCase().trim()) + "\" onchange=\"document." + Constants.PRODUCTS_FORM + ".submit()\">\n");
 		for (int recordsPerPageValue : Constants.RECORDS_PER_PAGE_VALUES) {
 			content.append("				<option value=\"" + recordsPerPageValue + "\"" + ((recordsPerPageValue == currentRecordsPerPage) ? " SELECTED" : "") + ">" + recordsPerPageValue + "</option>\n");
 		}
 		content.append("				</select>\n");
-		content.append("				" + Constants.PAGE + "<select name=\"" + Utilities.removeSpaces(Constants.PAGE.toLowerCase().trim()) + "\" onchange=\"document." + Constants.INVOICES_HISTORY_FORM + ".submit()\">\n");
+		content.append("				" + Constants.PAGE + "<select name=\"" + Utilities.removeSpaces(Constants.PAGE.toLowerCase().trim()) + "\" onchange=\"document." + Constants.PRODUCTS_FORM + ".submit()\">\n");
 		
-		for (int pageValue = 1; pageValue <= invoices.size() / currentRecordsPerPage + ((invoices.size() % currentRecordsPerPage) != 0 ? 1 : 0); pageValue++) {
+		for (int pageValue = 1; pageValue <= products.size() / currentRecordsPerPage + ((products.size() % currentRecordsPerPage) != 0 ? 1 : 0); pageValue++) {
 			content.append("				<option value=\"" + pageValue + "\"" + ((pageValue == currentPage) ? " SELECTED" : "") + ">" + pageValue + "</option>\n");
 		}
 		content.append("				</select>\n");
@@ -93,46 +93,45 @@ public class InvoicesHistoryGraphicUserInterface {
 		content.append("						</td>\n");
 
 		content.append("						<td>\n");
-		int index = 0;
-		for (List<Record> invoice : invoices) {
-			index++;
-			if (index < ((currentPage - 1) * currentRecordsPerPage + 1)
-					|| index > (currentPage * currentRecordsPerPage)) {
+		for (int index = 0; index < products.size(); index += 3) {
+			if (index + 1 < ((currentPage - 1) * currentRecordsPerPage + 1)
+					|| index + 1 > (currentPage * currentRecordsPerPage)) {
 				continue;
 			}
-			content.append("						<div id=\"wrapperrelative\">\n");
-			content.append("							<div id=\"wrappertop\"></div>\n");
-			content.append("							<div id=\"wrappermiddle\">\n");
-			content.append("								<table style=\"width: 100%;\" border=\"0\" cellpadding=\"4\" cellspacing=\"4\">\n");
-			content.append("									<tbody>\n");
-			content.append("										<tr>\n");
-			content.append("											<td>\n");
-			content.append("												<table style=\"width: 100%;\" border=\"0\" cellpadding=\"4\" cellspacing=\"4\">\n");
-			content.append("													<tbody>\n");
-			content.append("														<tr>\n");
-			content.append("															<td>&nbsp;</td>\n");
-			content.append("															<td style=\"text-align: left;\">\n");
-			for (Record field : invoice) {
-				content.append("															<b>" + field.getAttribute() + "</b>: " + field.getValue() + "\n");
-				content.append("															<br/>\n");
-			}
-			content.append("																<br/>\n");
-			content.append("															</td>\n");
-			content.append("														</tr>\n");
-			content.append("													</tbody>\n");
-			content.append("												</table>\n");
-			content.append("											</td>\n");
-			if (invoice.get(3).getValue().equals("false")) {
-				content.append("											<td>\n");
-				content.append("												<input type=\"image\" name=\"" + Constants.ISSUE.toLowerCase() + "_" + invoice.get(0).getValue() + "\" value=\"" + Constants.ISSUE + "\" src=\"./images/user_interface/home.png\" />\n");
-				content.append("											</td>\n");
-			}
-			content.append("										</tr>\n");
-			content.append("									</tbody>\n");
-			content.append("								</table>\n");
-			content.append("							</div>\n");
-			content.append("							<div id=\"wrapperbottom\"></div>\n");
-			content.append("						</div>\n");
+				content.append("					<div id=\"wrapperrelative\">\n");
+				content.append("						<div id=\"wrappertop\"></div>\n");
+				content.append("						<div id=\"wrappermiddle\">\n");
+				content.append("							<table style=\"width: 100%;\" border=\"0\" cellpadding=\"4\" cellspacing=\"4\">\n");
+				content.append("								<tbody>\n");
+				content.append("									<tr>\n");
+				for (int i = 0; i < 3; i++) {
+					if (index + i >= products.size()) break;
+					String currentIdentifier = products.get(index + i).get(0).getValue().toString();
+					System.out.println(currentIdentifier);
+					content.append("									<td>\n");
+					content.append("										<table>\n");
+					content.append("											<tbody>\n");
+					content.append("												<tr>\n");
+					content.append("													<td style=\"text-align: center;\">\n");
+					content.append("														<input type=\"image\" name=\"" + Constants.PRODUCT + "_" + currentIdentifier + "\" value=\"" + Constants.PRODUCT + "\" src=\"" + products.get(index + i).get(7).getValue() + "\" height=\"314\" width=\"208\"/>\n");
+					content.append("													</td>\n");
+					content.append("												</tr>\n");
+					content.append("												<tr>\n");
+					content.append("													<td style=\"text-align: center;\">" + products.get(index + i).get(1).getAttribute() + ": " + products.get(index + i).get(1).getValue() + "</td>\n");
+					content.append("												</tr>\n");
+					content.append("												<tr>\n");
+					content.append("													<td style=\"text-align: center;\">" + products.get(index + i).get(2).getAttribute() + ": " + products.get(index + i).get(2).getValue() + "</td>\n");
+					content.append("												</tr>\n");
+					content.append("											</tbody>\n");
+					content.append("										</table>\n");
+					content.append("									</td>\n");
+				}
+				content.append("									</tr>\n");
+				content.append("								</tbody>\n");
+				content.append("							</table>\n");
+				content.append("						</div>\n");
+				content.append("						<div id=\"wrapperbottom\"></div>\n");
+				content.append("					</div>\n");
 		}
 		content.append("						</td>\n");
 		content.append("					</tr>\n");
@@ -143,4 +142,5 @@ public class InvoicesHistoryGraphicUserInterface {
 		content.append("</html>");
 		printWriter.println(content.toString());
 	}
+
 }

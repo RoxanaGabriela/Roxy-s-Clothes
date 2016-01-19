@@ -3,21 +3,21 @@ package roxysshop.graphicuserinterface;
 import java.io.PrintWriter;
 import java.util.List;
 
-import roxysshop.businesslogic.InvoiceManager;
+import roxysshop.businesslogic.UserManager;
 import roxysshop.general.Constants;
 import roxysshop.general.Utilities;
 import roxysshop.helper.Record;
 
-public class InvoicesHistoryGraphicUserInterface {
-	public static InvoiceManager invoiceManager = new InvoiceManager();
+public class ClientsGraphicUserInterface {
+public static UserManager userManager = new UserManager();
 	
-	public InvoicesHistoryGraphicUserInterface() {
+	public ClientsGraphicUserInterface() {
 	}
 
-	public static void displayInvoicesHistoryGraphicUserInterface(String display, int currentRecordsPerPage, 
+	public static void displayClientsGraphicUserInterface(String display, int currentRecordsPerPage, 
 			int currentPage, PrintWriter printWriter) {
 		StringBuilder content = new StringBuilder();
-		List<List<Record>> invoices = invoiceManager.getAllInvoices();
+		List<List<Record>> clients = userManager.getCLients();
 		content.append(
 					"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n");
 		content.append("<html xmlns=\"http://www.w3.org/1999/xhtml\">\n");
@@ -30,7 +30,7 @@ public class InvoicesHistoryGraphicUserInterface {
 
 		content.append("	<body>\n");
 		content.append("		<h2 style=\"text-align: center\">" + Constants.APPLICATION_NAME.toUpperCase() + "</h2>\n");
-		content.append("		<form action=\"" + Constants.INVOICES_HISTORY_SERVLET_PAGE_CONTEXT + "\" method=\"post\" name=\"" + Constants.INVOICES_HISTORY_FORM + "\">\n");
+		content.append("		<form action=\"" + Constants.CLIENTS_SERVLET_PAGE_CONTEXT + "\" method=\"post\" name=\"" + Constants.CLIENTS_FORM + "\">\n");
 		content.append("			<table>\n");
 		content.append("				<tbody>\n");
 		content.append("					<tr>\n");
@@ -49,14 +49,14 @@ public class InvoicesHistoryGraphicUserInterface {
 		content.append("			<p style=\"text-align:right\">\n");
 		content.append("				" + Constants.WELCOME_MESSAGE + display + "\n");
 		content.append("				<br/>\n");
-		content.append("				" + Constants.RECORDS_PER_PAGE + "<select name=\"" + Utilities.removeSpaces(Constants.RECORDS_PER_PAGE.toLowerCase().trim()) + "\" onchange=\"document." + Constants.INVOICES_HISTORY_FORM + ".submit()\">\n");
+		content.append("				" + Constants.RECORDS_PER_PAGE + "<select name=\"" + Utilities.removeSpaces(Constants.RECORDS_PER_PAGE.toLowerCase().trim()) + "\" onchange=\"document." + Constants.CLIENTS_FORM + ".submit()\">\n");
 		for (int recordsPerPageValue : Constants.RECORDS_PER_PAGE_VALUES) {
 			content.append("				<option value=\"" + recordsPerPageValue + "\"" + ((recordsPerPageValue == currentRecordsPerPage) ? " SELECTED" : "") + ">" + recordsPerPageValue + "</option>\n");
 		}
 		content.append("				</select>\n");
-		content.append("				" + Constants.PAGE + "<select name=\"" + Utilities.removeSpaces(Constants.PAGE.toLowerCase().trim()) + "\" onchange=\"document." + Constants.INVOICES_HISTORY_FORM + ".submit()\">\n");
+		content.append("				" + Constants.PAGE + "<select name=\"" + Utilities.removeSpaces(Constants.PAGE.toLowerCase().trim()) + "\" onchange=\"document." + Constants.CLIENTS_FORM + ".submit()\">\n");
 		
-		for (int pageValue = 1; pageValue <= invoices.size() / currentRecordsPerPage + ((invoices.size() % currentRecordsPerPage) != 0 ? 1 : 0); pageValue++) {
+		for (int pageValue = 1; pageValue <= clients.size() / currentRecordsPerPage + ((clients.size() % currentRecordsPerPage) != 0 ? 1 : 0); pageValue++) {
 			content.append("				<option value=\"" + pageValue + "\"" + ((pageValue == currentPage) ? " SELECTED" : "") + ">" + pageValue + "</option>\n");
 		}
 		content.append("				</select>\n");
@@ -94,7 +94,7 @@ public class InvoicesHistoryGraphicUserInterface {
 
 		content.append("						<td>\n");
 		int index = 0;
-		for (List<Record> invoice : invoices) {
+		for (List<Record> client : clients) {
 			index++;
 			if (index < ((currentPage - 1) * currentRecordsPerPage + 1)
 					|| index > (currentPage * currentRecordsPerPage)) {
@@ -112,7 +112,7 @@ public class InvoicesHistoryGraphicUserInterface {
 			content.append("														<tr>\n");
 			content.append("															<td>&nbsp;</td>\n");
 			content.append("															<td style=\"text-align: left;\">\n");
-			for (Record field : invoice) {
+			for (Record field : client) {
 				content.append("															<b>" + field.getAttribute() + "</b>: " + field.getValue() + "\n");
 				content.append("															<br/>\n");
 			}
@@ -122,11 +122,9 @@ public class InvoicesHistoryGraphicUserInterface {
 			content.append("													</tbody>\n");
 			content.append("												</table>\n");
 			content.append("											</td>\n");
-			if (invoice.get(3).getValue().equals("false")) {
-				content.append("											<td>\n");
-				content.append("												<input type=\"image\" name=\"" + Constants.ISSUE.toLowerCase() + "_" + invoice.get(0).getValue() + "\" value=\"" + Constants.ISSUE + "\" src=\"./images/user_interface/home.png\" />\n");
-				content.append("											</td>\n");
-			}
+			content.append("											<td>\n");
+			content.append("												<input type=\"image\" name=\"" + Constants.DELETE_BUTTON_NAME.toLowerCase() + "_" + client.get(0).getValue() + "\" value=\"" + Constants.DELETE_BUTTON_NAME + "\" src=\"./images/user_interface/home.png\" />\n");
+			content.append("											</td>\n");
 			content.append("										</tr>\n");
 			content.append("									</tbody>\n");
 			content.append("								</table>\n");

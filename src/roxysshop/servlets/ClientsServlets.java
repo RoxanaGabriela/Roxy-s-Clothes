@@ -12,15 +12,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import roxysshop.businesslogic.InvoiceManager;
+import roxysshop.businesslogic.UserManager;
 import roxysshop.general.Constants;
 import roxysshop.general.Utilities;
-import roxysshop.graphicuserinterface.AdministratorGraphicUserInterface;
+import roxysshop.graphicuserinterface.ClientsGraphicUserInterface;
 
-public class AdministratorServlet extends HttpServlet {
-	final public static long serialVersionUID = 10021002L;
+public class ClientsServlets extends HttpServlet {
+final public static long serialVersionUID = 10021002L;
 	
-	InvoiceManager invoiceManager;
+	UserManager userManager;
 	
 	private String previousRecordsPerPage;
 	private String currentRecordsPerPage;
@@ -30,7 +30,7 @@ public class AdministratorServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		
-		invoiceManager = new InvoiceManager();
+		userManager = new UserManager();
 		
 		previousRecordsPerPage = String.valueOf(Constants.RECORDS_PER_PAGE_VALUES[0]);
 		currentRecordsPerPage = String.valueOf(Constants.RECORDS_PER_PAGE_VALUES[0]);
@@ -62,14 +62,18 @@ public class AdministratorServlet extends HttpServlet {
 				}
 				
 				if (parameter.equals(Constants.HOME.toLowerCase() + ".x")) {
-					//TODO
+					RequestDispatcher dispatcher = null;
+					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.ADMINISTRATOR_SERVLET_PAGE_CONTEXT);
+					if (dispatcher != null) {
+						dispatcher.forward(request, response);
+					}
 				}
 				
-				if (parameter.startsWith(Constants.ISSUE.toLowerCase() + "_")
+				if (parameter.startsWith(Constants.DELETE_BUTTON_NAME.toLowerCase() + "_")
 						&& parameter.endsWith(".x")) {
 					String identifier = parameter.substring(parameter.lastIndexOf("_") + 1, 
 							parameter.indexOf(".x"));
-					invoiceManager.issueInvoice(Long.parseLong(identifier));
+					userManager.updateNotified(identifier);
 				}
 				
 				if (parameter.equals(Constants.ACCOUNT.toLowerCase() + ".x")) {
@@ -89,11 +93,7 @@ public class AdministratorServlet extends HttpServlet {
 				}
 				
 				if (parameter.equals(Constants.CLIENTS.toLowerCase() + ".x")) {
-					RequestDispatcher dispatcher = null;
-					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.CLIENTS_SERVLET_PAGE_CONTEXT);
-					if (dispatcher != null) {
-						dispatcher.forward(request, response);
-					}
+					//TODO
 				}
 				
 				if (parameter.equals(Constants.PRODUCTS.toLowerCase() + ".x")) {
@@ -122,7 +122,7 @@ public class AdministratorServlet extends HttpServlet {
 				}
 			}
 			
-			AdministratorGraphicUserInterface.displayAdministratorGraphicUserInterface(display,
+			ClientsGraphicUserInterface.displayClientsGraphicUserInterface(display,
 					(currentRecordsPerPage != null && filterChange) ? Integer.parseInt(currentRecordsPerPage)
 							: Constants.RECORDS_PER_PAGE_VALUES[0],
 					(currentPage != null && filterChange && currentRecordsPerPage != null

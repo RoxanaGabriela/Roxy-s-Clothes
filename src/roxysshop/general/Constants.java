@@ -28,6 +28,8 @@ public interface Constants {
 	public final static String PRODUCT_SERVLET_PAGE_CONTEXT = "ProductServlet";
 	public final static String ADMINISTRATOR_SERVLET_PAGE_CONTEXT = "AdministratorServlet";
 	public final static String INVOICES_HISTORY_SERVLET_PAGE_CONTEXT = "InvoicesHistoryServlet";
+	public final static String PRODUCTS_SERVLET_PAGE_CONTEXT = "ProductsServlet";
+	public final static String CLIENTS_SERVLET_PAGE_CONTEXT = "ClientsServlet";
 
 	public final static String LOGIN_FORM = "login_form";
 	public final static String REGISTER_FORM = "register_form";
@@ -41,6 +43,8 @@ public interface Constants {
 	public final static String PRODUCT_FORM = "product_form";
 	public final static String ADMINISTRATOR_FORM = "administrator_form";
 	public final static String INVOICES_HISTORY_FORM = "invoices_history_form";
+	public final static String PRODUCTS_FORM = "products_form";
+	public final static String CLIENTS_FORM = "clients_form";
 	
 	public final static String SIGNUP = "Sign up";
 	public final static String SIGNIN = "Sign in";

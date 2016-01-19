@@ -89,11 +89,19 @@ final public static long serialVersionUID = 10021002L;
 				}
 				
 				if (parameter.equals(Constants.CLIENTS.toLowerCase() + ".x")) {
-					//TODO
+					RequestDispatcher dispatcher = null;
+					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.CLIENTS_SERVLET_PAGE_CONTEXT);
+					if (dispatcher != null) {
+						dispatcher.forward(request, response);
+					}
 				}
 				
 				if (parameter.equals(Constants.PRODUCTS.toLowerCase() + ".x")) {
-					//TODO
+					RequestDispatcher dispatcher = null;
+					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.PRODUCTS_SERVLET_PAGE_CONTEXT);
+					if (dispatcher != null) {
+						dispatcher.forward(request, response);
+					}
 				}
 				
 				if (parameter.equals(Constants.SIGNOUT.toLowerCase() + ".x")) {

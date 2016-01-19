@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import roxysshop.dataaccess.DatabaseException;
 import roxysshop.dataaccess.DatabaseOperations;
 import roxysshop.dataaccess.DatabaseOperationsImplementation;
 import roxysshop.general.Constants;
+import roxysshop.helper.Record;
 
 public class UserManager extends EntityManager {
 
@@ -214,22 +216,39 @@ public class UserManager extends EntityManager {
 		return null;
 	}
 	
-	public List<List<String>> getAddresses(String display) {
+	public List<List<Record>> getCLients() {
 		DatabaseOperations databaseOperations = null;
-		List<List<String>> addresses = new ArrayList<>();
+		List<List<Record>> clients = new ArrayList<>();
 		try {
 			databaseOperations = DatabaseOperationsImplementation.getInstance();
-			
-			List<String> attributes = new ArrayList<>();
-			attributes.add("a.id");
-			attributes.add("a.county");
-			attributes.add("a.city");
-			attributes.add("a.street");
-			attributes.add("a.postal_code");
-			String table = new String("user u, address a");
-			String whereClause = new String("a.user_id=u.id AND CONCAT("+ Constants.FIRST_NAME + ", ' ', " + Constants.LAST_NAME + ")=\'" + display + "\'");
-			
-			addresses = databaseOperations.getTableContent(table, attributes, whereClause, null, null, null);
+			List<List<String>> content = databaseOperations.getTableContent(table, null, "notified<3", null, null, null);
+			if (content != null && !content.isEmpty()) {
+				for (List<String> field : content) {
+					Record id = new Record ("Id", field.get(0));
+					Record firstName = new Record ("First name", field.get(1));
+					Record lastName = new Record ("Last name", field.get(2));
+					Record phoneNumber = new Record ("Phone number", field.get(3));
+					Record email = new Record ("Email", field.get(4));
+					Record username = new Record ("Username", field.get(5));
+					Record password = new Record ("Password", field.get(6));
+					Record notified = new Record ("Notified", "false");
+					if (Integer.parseInt(field.get(8)) == 1) {
+						notified.setValue("true");
+					}
+					
+					List<Record> client = new ArrayList<>();
+					client.add(id);
+					client.add(firstName);
+					client.add(lastName);
+					client.add(phoneNumber);
+					client.add(email);
+					client.add(username);
+					client.add(password);
+					client.add(notified);
+					
+					clients.add(client);
+				}
+			} 
 		} catch (SQLException sqlException) {
 			System.out.println("An exception has occurred: " + sqlException.getMessage());
 			if (Constants.DEBUG) {
@@ -238,6 +257,29 @@ public class UserManager extends EntityManager {
 		} finally {
 			databaseOperations.releaseResources();
 		}
-		return addresses;
+		return clients;
+	}
+	
+	public int updateNotified(String identifier) {
+		DatabaseOperations databaseOperations = null;
+		int updated = -1;
+		try {
+			databaseOperations = DatabaseOperationsImplementation.getInstance();
+			
+			List<String> attributes = new ArrayList<>();
+			attributes.add("notified");
+			
+			List<String> values = new ArrayList<>();
+			values.add("notified + 1");
+			updated = databaseOperations.updateRecordsIntoTable(table, attributes, values, "id=\'" + identifier + "\'");
+		} catch (SQLException | DatabaseException sqlException) {
+			System.out.println("An exception has occurred: " + sqlException.getMessage());
+			if (Constants.DEBUG) {
+				sqlException.printStackTrace();
+			}
+		} finally {
+			databaseOperations.releaseResources();
+		}
+		return updated;
 	}
 }

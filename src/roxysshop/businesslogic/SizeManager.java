@@ -71,7 +71,7 @@ public class SizeManager extends EntityManager {
 			List<String> attributes = new ArrayList<>();
 			attributes.add("s.size");
 			List<List<String>> content = databaseOperations.getTableContent("product p, size s", attributes,
-					"p.id=\'" + productId + "\' AND s.product_id=p.id", null, null, null);
+					"p.id=\'" + productId + "\' AND s.product_id=p.id AND s.stockpile>0", null, null, null);
 			
 			if (content != null) {
 				for (List<String> field : content) {
