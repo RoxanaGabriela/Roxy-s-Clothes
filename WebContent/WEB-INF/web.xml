@@ -120,6 +120,17 @@
 	
 	<servlet>
 		<description></description>
+		<display-name>AdminUpdateServlet</display-name>
+		<servlet-name>AdminUpdateServlet</servlet-name>
+		<servlet-class>roxysshop.servlets.AdminUpdateServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AdminUpdateServlet</servlet-name>
+		<url-pattern>/AdminUpdateServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<description></description>
 		<display-name>AdministratorServlet</display-name>
 		<servlet-name>AdministratorServlet</servlet-name>
 		<servlet-class>roxysshop.servlets.AdministratorServlet</servlet-class>

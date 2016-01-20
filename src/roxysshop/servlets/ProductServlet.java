@@ -108,7 +108,7 @@ public class ProductServlet extends HttpServlet {
 				}
 				if (parameter.equals(Constants.ACCOUNT.toLowerCase() + ".x")) {
 					RequestDispatcher dispatcher = null;
-					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.UPDATE_SERVLET_PAGE_CONTEXT);
+					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.ADMIN_UPDATE_SERVLET_PAGE_CONTEXT);
 					if (dispatcher != null) {
 						dispatcher.forward(request, response);
 					}
