@@ -16,7 +16,7 @@ public class ProductManager extends EntityManager {
 		table = "product";
 	}
 	
-	public List<List<Record>> getCollection(String currentSort, String currentCategory, List<String> labelsFilter, String currentSearch) {
+	public List<List<Record>> getCollection(String currentSort, String currentCategory, List<String> labelsFilter, String currentSearch, String valid) {
 		DatabaseOperations databaseOperations = null;
 		List<List<Record>> result = new ArrayList<>();
 		
@@ -35,7 +35,11 @@ public class ProductManager extends EntityManager {
 			attributes.add("GROUP_CONCAT(CONCAT(f.percent, '% ', f.name)) AS fabrics");
 			attributes.add("p.picture AS picture");
 			
-			String whereClause = new String("f.product_id=p.id AND p.valid='0'");
+			String whereClause = new String("f.product_id=p.id");
+			
+			if (valid != null) {
+				whereClause += " AND p.valid='1'";
+			}
 				
 			String orderByClause = new String();
 			if (currentSort != null && !currentSort.isEmpty()) {
@@ -171,7 +175,10 @@ public class ProductManager extends EntityManager {
 			attributes.add("valid");
 			
 			List<String> values = new ArrayList<>();
-			values.add("1");
+			List<List<String>> valid = databaseOperations.getTableContent(table, attributes, "id=\'" + identifier + "\'", null, null, null);
+			if (Integer.parseInt(valid.get(0).get(0)) == 0) values.add("1");
+			else values.add("0");
+
 			updated = databaseOperations.updateRecordsIntoTable(table, attributes, values, "id=\'" + identifier + "\'");
 		} catch (SQLException | DatabaseException sqlException) {
 			System.out.println("An exception has occurred: " + sqlException.getMessage());

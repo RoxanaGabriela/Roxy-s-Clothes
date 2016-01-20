@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS product (
     color               VARCHAR(50)     NOT NULL,
     description         VARCHAR(500)    NOT NULL,
     picture             VARCHAR(500)    NOT NULL,
-    valid				BOOLEAN			NOT NULL DEFAULT '0'
+    valid				BOOLEAN			NOT NULL DEFAULT '1'
 );
 ALTER TABLE product ADD CONSTRAINT product_ck_price_should_be_positive CHECK (price>0);
 ALTER TABLE product ADD CONSTRAINT product_ck_category_possible_values CHECK (type in ('pantaloni', 'bluze', 'tricouri', 'fuste', 'rochii', 'jachete'));

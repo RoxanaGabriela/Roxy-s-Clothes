@@ -78,7 +78,7 @@ public class AdministratorGraphicUserInterface {
 		content.append("											</tr>\n");
 		content.append("											<tr>\n");
 		content.append("												<td>\n");	
-		content.append("													<input type=\"image\" name=\"" + Constants.CLIENTS.toLowerCase() + "\" value=\"" + Constants.CLIENTS + "\" src=\"./images/user_interface/home.png\" />\n");
+		content.append("													<input type=\"image\" name=\"" + Constants.CLIENTS_HISTORY.toLowerCase() + "\" value=\"" + Constants.CLIENTS_HISTORY + "\" src=\"./images/user_interface/home.png\" />\n");
 		content.append("												</td>\n");
 		content.append("											</tr>\n");
 		content.append("											<tr>\n");

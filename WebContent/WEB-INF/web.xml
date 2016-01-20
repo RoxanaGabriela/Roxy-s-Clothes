@@ -142,6 +142,17 @@
 	
 	<servlet>
 		<description></description>
+		<display-name>ClientsHistoryServlet</display-name>
+		<servlet-name>ClientsHistoryServlet</servlet-name>
+		<servlet-class>roxysshop.servlets.ClientsHistoryServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ClientsHistoryServlet</servlet-name>
+		<url-pattern>/ClientsHistoryServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<description></description>
 		<display-name>ClientsServlet</display-name>
 		<servlet-name>ClientsServlet</servlet-name>
 		<servlet-class>roxysshop.servlets.ClientsServlet</servlet-class>

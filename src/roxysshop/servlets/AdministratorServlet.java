@@ -88,9 +88,9 @@ public class AdministratorServlet extends HttpServlet {
 					}
 				}
 				
-				if (parameter.equals(Constants.CLIENTS.toLowerCase() + ".x")) {
+				if (parameter.equals(Constants.CLIENTS_HISTORY.toLowerCase() + ".x")) {
 					RequestDispatcher dispatcher = null;
-					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.CLIENTS_SERVLET_PAGE_CONTEXT);
+					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.CLIENTS_HISTORY_SERVLET_PAGE_CONTEXT);
 					if (dispatcher != null) {
 						dispatcher.forward(request, response);
 					}

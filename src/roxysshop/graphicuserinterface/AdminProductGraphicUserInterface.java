@@ -93,7 +93,7 @@ public class AdminProductGraphicUserInterface {
 			content.append("														</tr>\n");
 			content.append("														<tr>\n");
 			content.append("															<td>\n");
-			content.append("																<input type=\"image\" name=\"" + Constants.INSERT_BUTTON_NAME.toLowerCase() + "_" + Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()) + "_" + currentIdentifier + "\" value=\"" + Constants.INSERT_BUTTON_NAME + "\" src=\"./images/user_interface/add_to_shopping_cart.png\"/>\n");
+			content.append("																<input type=\"image\" name=\"" + Constants.INSERT_BUTTON_NAME.toLowerCase() + "_" + currentIdentifier + "\" value=\"" + Constants.INSERT_BUTTON_NAME + "\" src=\"./images/user_interface/add_to_shopping_cart.png\"/>\n");
 			content.append("															</td>\n");
 			content.append("														</tr>");
 			content.append("													</tbody>\n");

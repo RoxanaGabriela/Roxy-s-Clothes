@@ -167,7 +167,7 @@ public class NotLoggedInClientServlet extends HttpServlet {
 			}
 			
 			if (products == null || filterChange) {
-				products = productManager.getCollection(sortBy, currentCategory, labelsFilter, currentSearch);
+				products = productManager.getCollection(sortBy, currentCategory, labelsFilter, currentSearch, new String());
 			}
 			
 			NotLoggedInClientGraphicUserInterface.displayNotLoggedInClientGraphicUserInterface(products,

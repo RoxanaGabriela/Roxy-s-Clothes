@@ -173,7 +173,7 @@ public class ClientServlet extends HttpServlet {
 			}
 			
 			if (products == null || filterChange) {
-				products = productManager.getCollection(sortBy, currentCategory, labelsFilter, currentSearch);
+				products = productManager.getCollection(sortBy, currentCategory, labelsFilter, currentSearch, new String());
 			}
 			
 			ClientGraphicUserInterface.displayClientGraphicUserInterface(display,

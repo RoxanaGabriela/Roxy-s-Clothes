@@ -72,12 +72,10 @@ public class AdminProductServlet extends HttpServlet {
 				}
 				
 				if (parameter
-						.startsWith(Constants.INSERT_BUTTON_NAME.toLowerCase() + "_"
-								+ Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()) + "_")
+						.startsWith(Constants.INSERT_BUTTON_NAME.toLowerCase() + "_")
 						&& parameter.endsWith(".x")) {
 					String id = parameter.substring(parameter.lastIndexOf("_") + 1,
 							parameter.indexOf(".x"));
-					System.out.println("Aici");
 					productManager.updateValid(id);
 				}
 				

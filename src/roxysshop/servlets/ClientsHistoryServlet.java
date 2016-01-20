@@ -12,15 +12,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import roxysshop.businesslogic.ProductManager;
+import roxysshop.businesslogic.UserManager;
 import roxysshop.general.Constants;
 import roxysshop.general.Utilities;
-import roxysshop.graphicuserinterface.ProductsGraphicUserInterface;
+import roxysshop.graphicuserinterface.ClientsHistoryGraphicUserInterface;
 
-public class ProductsServlet extends HttpServlet {
+public class ClientsHistoryServlet extends HttpServlet {
 final public static long serialVersionUID = 10021002L;
 	
-	ProductManager productManager;
+	UserManager userManager;
 	
 	private String previousRecordsPerPage;
 	private String currentRecordsPerPage;
@@ -30,7 +30,7 @@ final public static long serialVersionUID = 10021002L;
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		
-		productManager = new ProductManager();
+		userManager = new UserManager();
 		
 		previousRecordsPerPage = String.valueOf(Constants.RECORDS_PER_PAGE_VALUES[0]);
 		currentRecordsPerPage = String.valueOf(Constants.RECORDS_PER_PAGE_VALUES[0]);
@@ -61,23 +61,19 @@ final public static long serialVersionUID = 10021002L;
 					currentPage = request.getParameter(parameter);
 				}
 				
-				if (parameter.startsWith(Constants.PRODUCT.toLowerCase() + "_") 
-						&&  parameter.endsWith(".x")) {
-					String id = parameter.substring(parameter.lastIndexOf("_") + 1, parameter.indexOf(".x"));
-					session.setAttribute(Constants.PRODUCT, id);
-					RequestDispatcher dispatcher = null;
-					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.ADMIN_PRODUCT_SERVLET_PAGE_CONTEXT);
-					if (dispatcher != null) {
-						dispatcher.forward(request, response);
-					}
-				}
-				
 				if (parameter.equals(Constants.HOME.toLowerCase() + ".x")) {
 					RequestDispatcher dispatcher = null;
 					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.ADMINISTRATOR_SERVLET_PAGE_CONTEXT);
 					if (dispatcher != null) {
 						dispatcher.forward(request, response);
 					}
+				}
+				
+				if (parameter.startsWith(Constants.DELETE_BUTTON_NAME.toLowerCase() + "_")
+						&& parameter.endsWith(".x")) {
+					String identifier = parameter.substring(parameter.lastIndexOf("_") + 1, 
+							parameter.indexOf(".x"));
+					userManager.updateNotified(identifier);
 				}
 				
 				if (parameter.equals(Constants.ACCOUNT.toLowerCase() + ".x")) {
@@ -96,16 +92,16 @@ final public static long serialVersionUID = 10021002L;
 					}
 				}
 				
-				if (parameter.equals(Constants.CLIENTS_HISTORY.toLowerCase() + ".x")) {
-					RequestDispatcher dispatcher = null;
-					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.CLIENTS_HISTORY_SERVLET_PAGE_CONTEXT);
-					if (dispatcher != null) {
-						dispatcher.forward(request, response);
-					}
+				if (parameter.equals(Constants.CLIENTS.toLowerCase() + ".x")) {
+					//TODO
 				}
 				
 				if (parameter.equals(Constants.PRODUCTS.toLowerCase() + ".x")) {
-					//TODO
+					RequestDispatcher dispatcher = null;
+					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.PRODUCTS_SERVLET_PAGE_CONTEXT);
+					if (dispatcher != null) {
+						dispatcher.forward(request, response);
+					}
 				}
 				
 				if (parameter.equals(Constants.SIGNOUT.toLowerCase() + ".x")) {
@@ -126,7 +122,7 @@ final public static long serialVersionUID = 10021002L;
 				}
 			}
 			
-			ProductsGraphicUserInterface.displayProductsGraphicUserInterface(display,
+			ClientsHistoryGraphicUserInterface.displayClientsHistoryGraphicUserInterface(display,
 					(currentRecordsPerPage != null && filterChange) ? Integer.parseInt(currentRecordsPerPage)
 							: Constants.RECORDS_PER_PAGE_VALUES[0],
 					(currentPage != null && filterChange && currentRecordsPerPage != null

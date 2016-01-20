@@ -221,7 +221,7 @@ public class UserManager extends EntityManager {
 		List<List<Record>> clients = new ArrayList<>();
 		try {
 			databaseOperations = DatabaseOperationsImplementation.getInstance();
-			List<List<String>> content = databaseOperations.getTableContent(table, null, "notified<3", null, null, null);
+			List<List<String>> content = databaseOperations.getTableContent(table, null, "notified<3 AND type NOT LIKE 'administrator'", null, null, null);
 			if (content != null && !content.isEmpty()) {
 				for (List<String> field : content) {
 					Record id = new Record ("Id", field.get(0));
@@ -231,10 +231,7 @@ public class UserManager extends EntityManager {
 					Record email = new Record ("Email", field.get(4));
 					Record username = new Record ("Username", field.get(5));
 					Record password = new Record ("Password", field.get(6));
-					Record notified = new Record ("Notified", "false");
-					if (Integer.parseInt(field.get(8)) == 1) {
-						notified.setValue("true");
-					}
+					Record notified = new Record ("Notified", field.get(8));
 					
 					List<Record> client = new ArrayList<>();
 					client.add(id);
@@ -269,8 +266,11 @@ public class UserManager extends EntityManager {
 			List<String> attributes = new ArrayList<>();
 			attributes.add("notified");
 			
+			List<List<String>> content = databaseOperations.getTableContent(table, attributes, "id=\'" + identifier + "\'", null, null, null);
+			Integer notified = Integer.parseInt(content.get(0).get(0)) + 1;
+			
 			List<String> values = new ArrayList<>();
-			values.add("notified + 1");
+			values.add(notified + "");
 			updated = databaseOperations.updateRecordsIntoTable(table, attributes, values, "id=\'" + identifier + "\'");
 		} catch (SQLException | DatabaseException sqlException) {
 			System.out.println("An exception has occurred: " + sqlException.getMessage());
