@@ -14,10 +14,10 @@ public class ProductsGraphicUserInterface {
 	public ProductsGraphicUserInterface() {
 	}
 
-	public static void displayProductsGraphicUserInterface(String display, int currentRecordsPerPage, 
+	public static void displayProductsGraphicUserInterface(String display, List<Record> product, List<Record> fabrics, int currentRecordsPerPage, 
 			int currentPage, PrintWriter printWriter) {
 		StringBuilder content = new StringBuilder();
-		List<List<Record>> products = productManager.getCollection("p.id ASC", null, null, null, null);
+		List<List<Record>> products = productManager.getCollection("p.id ASC", null, null, null, null, null, null);
 		content.append(
 					"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n");
 		content.append("<html xmlns=\"http://www.w3.org/1999/xhtml\">\n");
@@ -93,6 +93,83 @@ public class ProductsGraphicUserInterface {
 		content.append("						</td>\n");
 
 		content.append("						<td>\n");
+		content.append("							<table>\n");
+		content.append("								<tbody>\n");
+		content.append("									<tr>\n");
+		content.append("									<td>\n");
+		content.append("										<div id=\"wrapperrelative\">\n");
+		content.append("											<div id=\"wrappertop\"></div>\n");
+		content.append("												<div id=\"wrappermiddle\">\n");
+		content.append("													<table style=\"width: 100%;\" border=\"0\" cellpadding=\"4\" cellspacing=\"4\">\n");
+		content.append("														<tbody>\n");
+		content.append("															<tr>\n");
+		content.append("																<td>\n");
+		content.append("																	<table>\n");
+		content.append("																		<tbody>\n");
+		for (Record field : product) {
+			content.append("																		<tr>\n");
+			content.append("																			<td>&nbsp;</td>\n");
+			content.append("																				<td style=\"text-align: left;\">" + field.getAttribute() + ": </td>\n");
+			content.append("																			<td>\n");
+			content.append("																				<input type=\"text\" name=\"" + field.getAttribute() + "\" id=\"url\" value=\"" + field.getValue() + "\" onclick=\"this.value = ''\">\n");
+			content.append("																			</td>\n");
+			content.append("																		</tr>\n");
+		}
+		content.append("																		</tbody>\n");
+		content.append("																	</table>\n");
+		content.append("																</td>\n");
+		content.append("																<td>\n");
+		content.append("																	<table>\n");
+		content.append("																		<tbody>\n");
+		content.append("																			<tr>\n");
+		content.append("																				<td>\n");
+		content.append("																					<p>Fabrics: </p>\n");
+		content.append("																				</td>\n");
+		content.append("																				<td>\n");
+		content.append("																					<input type=\"text\" name=\"" + Constants.FABRIC_NAME + "\" id=\"url\" value=\"\" onclick=\"this.value = ''\">\n");
+		content.append("																				</td>\n");
+		content.append("																				<td>\n");
+		content.append("																					<input type=\"text\" name=\"" + Constants.FABRIC_VALUE + "\" id=\"url\" value=\"\" onclick=\"this.value = ''\">\n");
+		content.append("																				</td>\n");
+     	content.append("																				<td>\n");
+     	content.append("                        					                    					<input type=\"image\" name=\"" + Constants.INSERT_BUTTON_NAME.toLowerCase() + "_" + Constants.FABRIC_NAME + "\" id=\"insert_address\" value=\"" + Constants.INSERT_BUTTON_NAME + "\" src=\"./images/user_interface/insert.png\"/>\n");
+     	content.append("																				</td>\n");
+     	content.append("            					                        					</tr>\n");
+     	content.append("                                					     					<tr>\n");
+     	content.append("																				<td colspan=\"2\">\n");
+     	content.append("                                        											<table>\n");
+     	content.append("                                                										<tbody>\n");
+     	for (Record fabric : fabrics) {
+     	    content.append("																						<tr>\n");
+     	    content.append("                    										                            	<td style=\"background: #ebebeb; text-align: left;\">" + fabric.getValue() + "% " + fabric.getAttribute() + "</td>\n");
+     	    content.append("                            										                        <td>\n");
+     	    content.append("																								<input type=\"image\" name=\"" + Constants.DELETE_BUTTON_NAME.toLowerCase() + "_" + Constants.FABRIC_NAME + "_" + fabric.getAttribute() + "\" src=\"./images/user_interface/delete.png\" width=\"16\" height=\"16\" />\n");
+     	    content.append("                        										                            </td>\n");
+     	    content.append("																						</tr>\n");
+     	}
+        content.append("                            										                	</tbody>\n");
+        content.append("                            										          		</table>\n");
+		content.append("																				</td>\n");
+		content.append("																			</tr>\n");
+		content.append("																		</tbody>\n");
+		content.append("																	</table>\n");
+		content.append("																</td>\n");
+		content.append("															</tr>\n");
+		content.append("															<tr>\n");
+		content.append("																<td colspan=\"2\">\n");
+		content.append("																	<input type=\"image\" src=\"./images/user_interface/update_button.png\" id=\"update\" name=\"" + Constants.UPDATE.toLowerCase() + "\" value=\"" + Constants.UPDATE + "\">\n");
+		content.append("																</td>\n");
+		content.append("															</tr>\n");
+		content.append("														</tbody>\n");
+		content.append("													</table>\n");
+		content.append("												</div>\n");
+		content.append("												<div id=\"wrapperbottom\"></div>\n");
+		content.append("											</div>\n");
+		content.append("										</td>\n");
+		content.append("										</tr>\n");
+		content.append("										<tr>\n");
+		content.append("										<td>\n");
+		
 		for (int index = 0; index < products.size(); index += 3) {
 			if (index + 1 < ((currentPage - 1) * currentRecordsPerPage + 1)
 					|| index + 1 > (currentPage * currentRecordsPerPage)) {

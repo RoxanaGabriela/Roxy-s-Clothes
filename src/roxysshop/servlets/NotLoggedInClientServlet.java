@@ -32,6 +32,8 @@ public class NotLoggedInClientServlet extends HttpServlet {
 	private String currentSort;
 	private String currentCategory;
 	private String currentSearch;
+	private String currentLowPrice;
+	private String currentHighPrice;
 	private List<String> labelsFilter;
 	private List<List<String>> shoppingCart;
 
@@ -46,6 +48,8 @@ public class NotLoggedInClientServlet extends HttpServlet {
 		currentPage = String.valueOf(1);
 		products = null;
 		currentCategory = null;
+		currentLowPrice = new String();
+		currentHighPrice = new String();
 	}
 
 	@Override
@@ -81,6 +85,11 @@ public class NotLoggedInClientServlet extends HttpServlet {
 				}
 				if (parameter.equals(Constants.INSERT_BUTTON_NAME.toLowerCase() + "_" + Constants.SEARCH + ".x")) {
 					currentSearch = request.getParameter(Constants.SEARCH.toLowerCase());
+					filterChange = true;
+				}
+				if (parameter.equals(Constants.INSERT_BUTTON_NAME.toLowerCase() + "_" + Constants.PRICE + ".x")) {
+					currentLowPrice = request.getParameter(Constants.PRICE.toLowerCase() + "_low");
+					currentHighPrice = request.getParameter(Constants.PRICE.toLowerCase() + "_high");
 					filterChange = true;
 				}
 				if (parameter.equals(Constants.CURRENT_SORT)) {
@@ -167,11 +176,13 @@ public class NotLoggedInClientServlet extends HttpServlet {
 			}
 			
 			if (products == null || filterChange) {
-				products = productManager.getCollection(sortBy, currentCategory, labelsFilter, currentSearch, new String());
+				products = productManager.getCollection(sortBy, currentCategory, labelsFilter, currentSearch, new String(), currentLowPrice, currentHighPrice);
 			}
 			
 			NotLoggedInClientGraphicUserInterface.displayNotLoggedInClientGraphicUserInterface(products,
 					shoppingCart,
+					currentLowPrice,
+					currentHighPrice,
 					(currentRecordsPerPage != null && filterChange) ? Integer.parseInt(currentRecordsPerPage)
 							: Constants.RECORDS_PER_PAGE_VALUES[0],
 					(currentPage != null && filterChange && currentRecordsPerPage != null

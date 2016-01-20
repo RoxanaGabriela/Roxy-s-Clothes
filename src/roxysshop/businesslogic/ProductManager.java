@@ -16,7 +16,7 @@ public class ProductManager extends EntityManager {
 		table = "product";
 	}
 	
-	public List<List<Record>> getCollection(String currentSort, String currentCategory, List<String> labelsFilter, String currentSearch, String valid) {
+	public List<List<Record>> getCollection(String currentSort, String currentCategory, List<String> labelsFilter, String currentSearch, String valid, String currentLowPrice, String currentHighPrice) {
 		DatabaseOperations databaseOperations = null;
 		List<List<Record>> result = new ArrayList<>();
 		
@@ -41,6 +41,14 @@ public class ProductManager extends EntityManager {
 				whereClause += " AND p.valid='1'";
 			}
 				
+			if (currentLowPrice != null && !currentLowPrice.isEmpty()) {
+				whereClause += " AND p.price>" + currentLowPrice;
+			}
+			
+			if (currentHighPrice != null && !currentHighPrice.isEmpty()) {
+				whereClause += " AND p.price<" + currentHighPrice;
+			}
+			
 			String orderByClause = new String();
 			if (currentSort != null && !currentSort.isEmpty()) {
 				orderByClause = currentSort;
@@ -221,5 +229,57 @@ public class ProductManager extends EntityManager {
 			databaseOperations.releaseResources();
 		}
 		return updated;
+	}
+	
+	public long addProduct(List<Record> product, List<Record> fabrics) {
+		DatabaseOperations databaseOperations = null;
+		long inserted = -1;
+		try {
+			databaseOperations = DatabaseOperationsImplementation.getInstance();
+			
+			List<String> attributes = new ArrayList<>();
+			attributes.add("name");
+			attributes.add("price");
+			attributes.add("producer");
+			attributes.add("color");
+			attributes.add("description");
+			attributes.add("category");
+			attributes.add("picture");
+			attributes.add("currency");
+			attributes.add("date");
+			
+			List<String> values = new ArrayList<>();
+			values.add(product.get(0).getValue().toString());
+			values.add(product.get(1).getValue().toString());
+			values.add(product.get(2).getValue().toString());
+			values.add(product.get(3).getValue().toString());
+			values.add(product.get(4).getValue().toString());
+			values.add(product.get(5).getValue().toString());
+			values.add(product.get(6).getValue().toString());
+			values.add("LEI");
+			values.add("CURDATE()");
+
+			inserted = databaseOperations.insertValuesIntoTable(table, attributes, values, true);
+			
+			if (fabrics != null) {
+				for (Record fabric : fabrics) {
+					values = new ArrayList<>();
+					
+					values.add(fabric.getAttribute());
+					values.add(fabric.getValue().toString());
+					values.add(inserted + "");
+					
+					databaseOperations.insertValuesIntoTable("fabric", null, values, true);
+				}
+			}
+		} catch (SQLException | DatabaseException sqlException) {
+			System.out.println("An exception has occurred: " + sqlException.getMessage());
+			if (Constants.DEBUG) {
+				sqlException.printStackTrace();
+			}
+		} finally {
+			databaseOperations.releaseResources();
+		}
+		return inserted;
 	}
 }

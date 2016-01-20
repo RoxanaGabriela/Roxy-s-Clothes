@@ -66,6 +66,9 @@ public interface Constants {
 	public final static String CLIENTS_HISTORY = "clientsHistory";
 	public final static String PRODUCTS = "products";
 	public final static String ISSUE = "issue";
+	public final static String PRICE = "price";
+	public final static String FABRIC_NAME = "fabric_name";
+	public final static String FABRIC_VALUE = "fabric_value";
 	
 	
 	public final static String ERROR_USERNAME_PASSWORD = "Either username or password are incorrect!";

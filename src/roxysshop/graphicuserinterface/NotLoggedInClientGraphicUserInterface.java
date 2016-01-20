@@ -18,7 +18,7 @@ public class NotLoggedInClientGraphicUserInterface {
 	public NotLoggedInClientGraphicUserInterface() {
 	}
 
-	public static void displayNotLoggedInClientGraphicUserInterface(List<List<Record>> products, List<List<String>> shoppingCart, int currentRecordsPerPage, int currentPage, String currentSort,
+	public static void displayNotLoggedInClientGraphicUserInterface(List<List<Record>> products, List<List<String>> shoppingCart, String currentLowPrice, String currentHighPrice, int currentRecordsPerPage, int currentPage, String currentSort,
 											String currentCategory, List<String> labelsFilter, String currentSearch, PrintWriter printWriter) {
 		StringBuilder content = new StringBuilder();
 		content.append(
@@ -119,9 +119,21 @@ public class NotLoggedInClientGraphicUserInterface {
 		content.append("												</td>\n");
 		content.append("											</tr>\n");
 		content.append("											<tr>\n");
+		content.append("												<td>" + Constants.PRICE + "</td>\n");
+		content.append("												<td>\n");
+		content.append("													<input type=\"text\" name=\"" + Constants.PRICE.toLowerCase() + "_low" + "\" value=\"" + currentLowPrice + "\"size=\"5\"/>\n");
+		content.append("												</td>\n");
+		content.append("												<td>\n");
+		content.append("													<input type=\"text\" name=\"" + Constants.PRICE.toLowerCase() + "_high" + "\" value=\"" + currentHighPrice + "\"size=\"5\"/>\n");
+		content.append("												</td>\n");
+		content.append("												<td>\n");
+		content.append("													<input type=\"image\" name=\"" + Constants.INSERT_BUTTON_NAME.toLowerCase() + "_" + Constants.PRICE + "\" value=\"" + Constants.INSERT_BUTTON_NAME + "\" src=\"./images/user_interface/search.png\"/>\n");
+		content.append("												</td>\n");
+		content.append("											</tr>\n");
+		content.append("											<tr>\n");
 		content.append("												<td>" + Constants.LABEL + "</td>\n");
 		content.append("												<td>\n");
-		content.append("													<input type=\"text\" name=\"" + Constants.LABEL.toLowerCase() + "\" size=\"5\"/>\n");
+		content.append("													<input type=\"text\" name=\"" + Constants.LABEL.toLowerCase() + "\" />\n");
 		content.append("												</td>\n");
 		content.append("												<td>\n");
 		content.append("												<input type=\"image\" name=\"" + Constants.INSERT_BUTTON_NAME.toLowerCase() + "_" + Constants.LABEL + "\" value=\"" + Constants.INSERT_BUTTON_NAME + "\" src=\"./images/user_interface/insert.png\"/>\n");
