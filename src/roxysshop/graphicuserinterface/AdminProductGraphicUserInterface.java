@@ -71,26 +71,23 @@ public class AdminProductGraphicUserInterface {
 				if (field.getAttribute().equals("Picture")) continue;
 				content.append("													<tr>\n");
 				content.append("														<td>&nbsp;</td>\n");
-				content.append("														<td style=\"text-align: left;\">" + field.getAttribute() + ": " + field.getValue() + "</td>\n");
+				content.append("														<td style=\"text-align: left;\">" + field.getAttribute() + ": </td>\n");
+				content.append("														<td>\n");
+				content.append("															<input type=\"text\" name=\"" + field.getAttribute() + "\" id=\"url\" value=\"" + field.getValue() + "\" onclick=\"this.value = ''\">\n");
+				content.append("														</td>\n");
 				content.append("													</tr>\n");
 			}				
+			content.append("											<tr>\n");
+			content.append("												<td colspan=\"2\">\n");
+			content.append("													<input type=\"image\" src=\"./images/user_interface/update_button.png\" id=\"update\" name=\"" + Constants.UPDATE.toLowerCase() + "\" value=\"" + Constants.UPDATE + "\">\n");
+			content.append("												</td>\n");
+			content.append("											</tr>\n");
 			content.append("													</tbody>\n");
 			content.append("												</table>\n");
 			content.append("											</td>\n");
 			content.append("											<td>\n");
 			content.append("												<table style=\"width: 100%;\" border=\"0\" cellpadding=\"4\" cellspacing=\"4\">\n");
 			content.append("													<tbody>\n");
-			content.append("														<tr>\n");
-			content.append("															<td>" + Constants.SIZE + "</td>\n");
-			content.append("															<td>\n");		
-			content.append("																<select name=\"" + Constants.CURRENT_SIZE + "\" onchange=\"document." + Constants.PRODUCT_FORM + ".submit()\"" + "\" style=\"width: 100%\">\n");
-			List<String> sizeList = sizeManager.getSizes(Long.parseLong(currentIdentifier));
-			for (String sizeAttribute : sizeList) {
-				content.append("																<option value=\"" + sizeAttribute + "\"" + ((sizeAttribute.equals(currentSize)) ? " SELECTED" : "") + ">" + sizeAttribute + "</option>\n");
-			}
-			content.append("																</select>\n");		
-			content.append("															</td>\n");
-			content.append("														</tr>\n");
 			content.append("														<tr>\n");
 			content.append("															<td>\n");
 			content.append("																<input type=\"image\" name=\"" + Constants.INSERT_BUTTON_NAME.toLowerCase() + "_" + currentIdentifier + "\" value=\"" + Constants.INSERT_BUTTON_NAME + "\" src=\"./images/user_interface/add_to_shopping_cart.png\"/>\n");

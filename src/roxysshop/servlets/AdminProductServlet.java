@@ -19,6 +19,7 @@ import roxysshop.general.Constants;
 import roxysshop.general.Utilities;
 import roxysshop.graphicuserinterface.AdminProductGraphicUserInterface;
 import roxysshop.graphicuserinterface.ProductGraphicUserInterface;
+import roxysshop.graphicuserinterface.UpdateGraphicUserInterface;
 import roxysshop.helper.Record;
 
 public class AdminProductServlet extends HttpServlet {
@@ -63,10 +64,17 @@ public class AdminProductServlet extends HttpServlet {
 				product = new ArrayList<>();
 			}
 			
+			boolean changed = false;
 			Enumeration<String> parameters = request.getParameterNames();
 			while (parameters.hasMoreElements()) {
 				String parameter = (String) parameters.nextElement();
 			
+				for (Record field : product) {
+					if (parameter.equals(field.getAttribute())) {
+						field.setValue(request.getParameter(parameter));
+					}
+				}
+				
 				if (parameter.equals(Constants.CURRENT_SIZE)) {
 					currentSize = request.getParameter(parameter);
 				}
@@ -77,6 +85,7 @@ public class AdminProductServlet extends HttpServlet {
 					String id = parameter.substring(parameter.lastIndexOf("_") + 1,
 							parameter.indexOf(".x"));
 					productManager.updateValid(id);
+					changed = true;
 				}
 				
 				if (parameter.equals(Constants.HOME.toLowerCase() + ".x")) {
@@ -88,7 +97,7 @@ public class AdminProductServlet extends HttpServlet {
 				}
 				if (parameter.equals(Constants.ACCOUNT.toLowerCase() + ".x")) {
 					RequestDispatcher dispatcher = null;
-					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.UPDATE_SERVLET_PAGE_CONTEXT);
+					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.ADMIN_UPDATE_SERVLET_PAGE_CONTEXT);
 					if (dispatcher != null) {
 						dispatcher.forward(request, response);
 					}
@@ -132,6 +141,16 @@ public class AdminProductServlet extends HttpServlet {
 					}
 					session.invalidate();
 					break;
+				}
+				
+				if (parameter.equals(Constants.UPDATE.toLowerCase() + ".x")) {
+					productManager.updateProduct(product, Long.parseLong(identifier));
+					changed = true;
+				}
+				
+				if (changed) product = productManager.getDetails(Long.parseLong(identifier));
+				if (product == null) {
+					product = new ArrayList<>();
 				}
 			}
 			AdminProductGraphicUserInterface.displayAdminProductGraphicUserInterface(display, product, currentSize, shoppingCart, printWriter);

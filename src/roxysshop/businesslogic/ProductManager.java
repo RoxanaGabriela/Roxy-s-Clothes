@@ -190,4 +190,36 @@ public class ProductManager extends EntityManager {
 		}
 		return updated;
 	}
+	
+	public int updateProduct(List<Record> details, long identifier) {
+		DatabaseOperations databaseOperations = null;
+		int updated = -1;
+		try {
+			databaseOperations = DatabaseOperationsImplementation.getInstance();
+			
+			List<String> attributes = new ArrayList<>();
+			attributes.add("name");
+			attributes.add("price");
+			attributes.add("producer");
+			attributes.add("color");
+			attributes.add("description");
+			
+			List<String> values = new ArrayList<>();
+			values.add(details.get(1).getValue().toString());
+			values.add(details.get(2).getValue().toString());
+			values.add(details.get(3).getValue().toString());
+			values.add(details.get(4).getValue().toString());
+			values.add(details.get(5).getValue().toString());
+
+			updated = databaseOperations.updateRecordsIntoTable(table, attributes, values, "id=\'" + identifier + "\'");
+		} catch (SQLException | DatabaseException sqlException) {
+			System.out.println("An exception has occurred: " + sqlException.getMessage());
+			if (Constants.DEBUG) {
+				sqlException.printStackTrace();
+			}
+		} finally {
+			databaseOperations.releaseResources();
+		}
+		return updated;
+	}
 }
