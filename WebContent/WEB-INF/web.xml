@@ -164,6 +164,17 @@
 	
 	<servlet>
 		<description></description>
+		<display-name>AdminProductServlet</display-name>
+		<servlet-name>AdminProductServlet</servlet-name>
+		<servlet-class>roxysshop.servlets.AdminProductServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AdminProductServlet</servlet-name>
+		<url-pattern>/AdminProductServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<description></description>
 		<display-name>NewProductServlet</display-name>
 		<servlet-name>NewProductServlet</servlet-name>
 		<servlet-class>roxysshop.servlets.NewProductServlet</servlet-class>

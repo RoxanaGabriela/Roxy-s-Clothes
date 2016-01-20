@@ -2,7 +2,9 @@ package roxysshop.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -15,32 +17,32 @@ import javax.servlet.http.HttpSession;
 import roxysshop.businesslogic.ProductManager;
 import roxysshop.general.Constants;
 import roxysshop.general.Utilities;
-import roxysshop.graphicuserinterface.ProductsGraphicUserInterface;
+import roxysshop.graphicuserinterface.AdminProductGraphicUserInterface;
+import roxysshop.graphicuserinterface.ProductGraphicUserInterface;
+import roxysshop.helper.Record;
 
-public class ProductsServlet extends HttpServlet {
-final public static long serialVersionUID = 10021002L;
+public class AdminProductServlet extends HttpServlet {
+	final public static long serialVersionUID = 10021002L;
 	
-	ProductManager productManager;
+	private ProductManager productManager;
 	
-	private String previousRecordsPerPage;
-	private String currentRecordsPerPage;
-	private String currentPage;
+	List<Record> product;	
+	private String currentSize;
+	private List<List<String>> shoppingCart;
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		
 		productManager = new ProductManager();
 		
-		previousRecordsPerPage = String.valueOf(Constants.RECORDS_PER_PAGE_VALUES[0]);
-		currentRecordsPerPage = String.valueOf(Constants.RECORDS_PER_PAGE_VALUES[0]);
-		currentPage = String.valueOf(1);
+		currentSize = null;
 	}
 
 	@Override
 	public void destroy() {
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(true);
@@ -50,26 +52,33 @@ final public static long serialVersionUID = 10021002L;
 		try (PrintWriter printWriter = new PrintWriter(response.getWriter())) {
 			String display = session.getAttribute(Constants.DISPLAY).toString();
 			
-			boolean filterChange = false;
+			shoppingCart = (List<List<String>>) session.getAttribute(Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()));
+			if (shoppingCart == null) {
+				shoppingCart = new ArrayList<>();
+			}
+			
+			String identifier = (String) session.getAttribute(Constants.PRODUCT);
+			product = productManager.getDetails(Long.parseLong(identifier));
+			if (product == null) {
+				product = new ArrayList<>();
+			}
+			
 			Enumeration<String> parameters = request.getParameterNames();
 			while (parameters.hasMoreElements()) {
 				String parameter = (String) parameters.nextElement();
-				if (parameter.equals(Utilities.removeSpaces(Constants.RECORDS_PER_PAGE.toLowerCase().trim()))) {
-					currentRecordsPerPage = request.getParameter(parameter);
-				}
-				if (parameter.equals(Utilities.removeSpaces(Constants.PAGE.toLowerCase().trim()))) {
-					currentPage = request.getParameter(parameter);
+			
+				if (parameter.equals(Constants.CURRENT_SIZE)) {
+					currentSize = request.getParameter(parameter);
 				}
 				
-				if (parameter.startsWith(Constants.PRODUCT.toLowerCase() + "_") 
-						&&  parameter.endsWith(".x")) {
-					String id = parameter.substring(parameter.lastIndexOf("_") + 1, parameter.indexOf(".x"));
-					session.setAttribute(Constants.PRODUCT, id);
-					RequestDispatcher dispatcher = null;
-					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.ADMIN_PRODUCT_SERVLET_PAGE_CONTEXT);
-					if (dispatcher != null) {
-						dispatcher.forward(request, response);
-					}
+				if (parameter
+						.startsWith(Constants.INSERT_BUTTON_NAME.toLowerCase() + "_"
+								+ Utilities.removeSpaces(Constants.SHOPPING_CART.toLowerCase()) + "_")
+						&& parameter.endsWith(".x")) {
+					String id = parameter.substring(parameter.lastIndexOf("_") + 1,
+							parameter.indexOf(".x"));
+					System.out.println("Aici");
+					productManager.updateValid(id);
 				}
 				
 				if (parameter.equals(Constants.HOME.toLowerCase() + ".x")) {
@@ -79,7 +88,6 @@ final public static long serialVersionUID = 10021002L;
 						dispatcher.forward(request, response);
 					}
 				}
-				
 				if (parameter.equals(Constants.ACCOUNT.toLowerCase() + ".x")) {
 					RequestDispatcher dispatcher = null;
 					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.UPDATE_SERVLET_PAGE_CONTEXT);
@@ -105,7 +113,11 @@ final public static long serialVersionUID = 10021002L;
 				}
 				
 				if (parameter.equals(Constants.PRODUCTS.toLowerCase() + ".x")) {
-					//TODO
+					RequestDispatcher dispatcher = null;
+					dispatcher = getServletContext().getRequestDispatcher("/" + Constants.PRODUCTS_SERVLET_PAGE_CONTEXT);
+					if (dispatcher != null) {
+						dispatcher.forward(request, response);
+					}
 				}
 				
 				if (parameter.equals(Constants.SIGNOUT.toLowerCase() + ".x")) {
@@ -113,9 +125,8 @@ final public static long serialVersionUID = 10021002L;
 					while (requestParameters.hasMoreElements()) {
 						request.removeAttribute(requestParameters.nextElement());
 					}
-					previousRecordsPerPage = String.valueOf(Constants.RECORDS_PER_PAGE_VALUES[0]);
-					currentRecordsPerPage = String.valueOf(Constants.RECORDS_PER_PAGE_VALUES[0]);
-					currentPage = String.valueOf(1);
+					currentSize = null;
+					product = null;
 					RequestDispatcher dispatcher = getServletContext()
 							.getRequestDispatcher("/" + Constants.NOT_LOGGED_IN_CLIENT_SERVLET_PAGE_CONTEXT);
 					if (dispatcher != null) {
@@ -125,14 +136,7 @@ final public static long serialVersionUID = 10021002L;
 					break;
 				}
 			}
-			
-			ProductsGraphicUserInterface.displayProductsGraphicUserInterface(display,
-					(currentRecordsPerPage != null && filterChange) ? Integer.parseInt(currentRecordsPerPage)
-							: Constants.RECORDS_PER_PAGE_VALUES[0],
-					(currentPage != null && filterChange && currentRecordsPerPage != null
-							&& currentRecordsPerPage.equals(previousRecordsPerPage)) ? Integer.parseInt(currentPage)
-									: 1,
-									printWriter);
+			AdminProductGraphicUserInterface.displayAdminProductGraphicUserInterface(display, product, currentSize, shoppingCart, printWriter);
 		}
 	}
 	

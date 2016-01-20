@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import roxysshop.dataaccess.DatabaseException;
 import roxysshop.dataaccess.DatabaseOperations;
 import roxysshop.dataaccess.DatabaseOperationsImplementation;
 import roxysshop.general.Constants;
@@ -118,6 +119,7 @@ public class ProductManager extends EntityManager {
 			attributes.add("p.description AS description");
 			attributes.add("GROUP_CONCAT(CONCAT(f.percent, '% ', f.name)) AS fabrics");
 			attributes.add("p.picture AS picture");
+			attributes.add("p.valid AS valid");
 			
 			String whereClause = new String("f.product_id=p.id AND p.id=\'" + identifier + "\'");
 			List<List<String>> product = databaseOperations.getTableContent(tableName, attributes, whereClause, null, null, null);
@@ -132,6 +134,10 @@ public class ProductManager extends EntityManager {
 				Record fabrics = new Record("Fabrics", product.get(0).get(6));
 				Record picture = new Record("Picture", product.get(0).get(7));
 				
+				Record valid = new Record("Valid", "false");
+				if (Integer.parseInt(product.get(0).get(8)) == 0) {
+					valid.setValue("true");
+				}
 				details.add(id);
 				details.add(name);
 				details.add(price);
@@ -140,6 +146,7 @@ public class ProductManager extends EntityManager {
 				details.add(description);
 				details.add(fabrics);
 				details.add(picture);
+				details.add(valid);
 				
 				return details;
 			}		
@@ -152,5 +159,28 @@ public class ProductManager extends EntityManager {
 			databaseOperations.releaseResources();
 		}
 		return null;
+	}
+	
+	public int updateValid(String identifier) {
+		DatabaseOperations databaseOperations = null;
+		int updated = -1;
+		try {
+			databaseOperations = DatabaseOperationsImplementation.getInstance();
+			
+			List<String> attributes = new ArrayList<>();
+			attributes.add("valid");
+			
+			List<String> values = new ArrayList<>();
+			values.add("1");
+			updated = databaseOperations.updateRecordsIntoTable(table, attributes, values, "id=\'" + identifier + "\'");
+		} catch (SQLException | DatabaseException sqlException) {
+			System.out.println("An exception has occurred: " + sqlException.getMessage());
+			if (Constants.DEBUG) {
+				sqlException.printStackTrace();
+			}
+		} finally {
+			databaseOperations.releaseResources();
+		}
+		return updated;
 	}
 }

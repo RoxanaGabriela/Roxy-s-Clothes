@@ -26,6 +26,7 @@ public interface Constants {
 	public final static String SHOPPING_CART_SERVLET_PAGE_CONTEXT = "ShoppingCartServlet";
 	public final static String NOT_LOGGED_IN_SHOPPING_CART_SERVLET_PAGE_CONTEXT = "NotLoggedInShoppingCartServlet";
 	public final static String PRODUCT_SERVLET_PAGE_CONTEXT = "ProductServlet";
+	public final static String ADMIN_PRODUCT_SERVLET_PAGE_CONTEXT = "AdminProductServlet";
 	public final static String ADMINISTRATOR_SERVLET_PAGE_CONTEXT = "AdministratorServlet";
 	public final static String INVOICES_HISTORY_SERVLET_PAGE_CONTEXT = "InvoicesHistoryServlet";
 	public final static String PRODUCTS_SERVLET_PAGE_CONTEXT = "ProductsServlet";
@@ -41,6 +42,7 @@ public interface Constants {
 	public final static String SHOPPING_CART_FORM = "shopping_cart_form";
 	public final static String NOT_LOGGED_IN_SHOPPING_CART_FORM = "not_logged_in_shopping_cart_form";
 	public final static String PRODUCT_FORM = "product_form";
+	public final static String ADMIN_PRODUCT_FORM = "admin_product_form";
 	public final static String ADMINISTRATOR_FORM = "administrator_form";
 	public final static String INVOICES_HISTORY_FORM = "invoices_history_form";
 	public final static String PRODUCTS_FORM = "products_form";
